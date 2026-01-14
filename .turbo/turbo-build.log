@@ -1,0 +1,57 @@
+
+> nextjs@0.1.0 build /Users/segevs/Desktop/dev/codebases/cjemagid/guestwho/oss/nextjs
+> next build
+
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/segevs/Desktop/dev/codebases/cjemagid/guestwho/pnpm-lock.yaml as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/segevs/Desktop/dev/codebases/cjemagid/guestwho/oss/nextjs/package-lock.json
+
+   ▲ Next.js 16.0.5 (Turbopack)
+
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Turbopack build encountered 1 warnings:
+./oss/nextjs/src/app/globals.scss
+Issue while running loader
+SassWarning: Deprecation Warning on line 1, column 8 of file:///Users/segevs/Desktop/dev/codebases/cjemagid/guestwho/oss/nextjs/src/app/globals.scss:1:8:
+Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+
+More info and automated migrator: https://sass-lang.com/d/import
+
+1 | @import 'tailwindcss';
+
+
+src/app/globals.scss 2:9  root stylesheet
+
+
+
+ ✓ Compiled successfully in 5.7s
+   Running TypeScript ...
+   Collecting page data using 11 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 11 workers (0/5) ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+   Generating static pages using 11 workers (1/5) 
+   Generating static pages using 11 workers (2/5) 
+   Generating static pages using 11 workers (3/5) 
+[Cohost SDK] Error(403): {"error":"Invalid or expired token"} { url: 'https://api.cohost.vip/v1/events' }
+Error occurred prerendering page "/events". Read more: https://nextjs.org/docs/messages/prerender-error
+Error [CohostError]: {"error":"Invalid or expired token"}
+    at n.request (.next/server/chunks/ssr/[root-of-the-server]__9b8ea495._.js:1:4378)
+    at async e (.next/server/chunks/ssr/[root-of-the-server]__9b8ea495._.js:1:10004) {
+  errorCode: 'Forbidden',
+  statusCode: 403,
+  digest: '3666362698'
+}
+Export encountered an error on /events/page: /events, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null
+ ELIFECYCLE  Command failed with exit code 1.

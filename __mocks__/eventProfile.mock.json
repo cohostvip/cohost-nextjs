@@ -1,0 +1,58 @@
+{
+  "changed": "2026-01-01T20:23:03.966Z",
+  "channels": [],
+  "companyId": "fDrEX1Y7w87rPM70r2L3",
+  "created": "2025-12-05T00:23:38.422Z",
+  "currency": "USD",
+  "description": {
+    "html": "<p>Dance into the New Year with stacked lineups, historic architecture, and a vibe that goes from midnight madness to day-one bliss. Expect an immersive experience with state-of-the-art production, 10-point sound, and visual elements that transform the station into a full-scale celebration.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>NYE &mdash; Dec 31<br>Bonobo (3-hour set) + More<br>A full-tilt countdown throwdown to close out the year in style.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>NYD &mdash; Jan 1<br>&Acirc;me (Live) &bull; Colyn &bull; Jimi Jules &bull; Marsh<br>A melodic daytime journey to start the year with intention and sunshine energy.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>Single-day and two-day passes available.</p>",
+    "text": "<p>Dance into the New Year with stacked lineups, historic architecture, and a vibe that goes from midnight madness to day-one bliss. Expect an immersive experience with state-of-the-art production, 10-point sound, and visual elements that transform the station into a full-scale celebration.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>NYE &mdash; Dec 31<br>Bonobo (3-hour set) + More<br>A full-tilt countdown throwdown to close out the year in style.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>NYD &mdash; Jan 1<br>&Acirc;me (Live) &bull; Colyn &bull; Jimi Jules &bull; Marsh<br>A melodic daytime journey to start the year with intention and sunshine energy.</p>\n<p>&nbsp;</p>\n<p>&nbsp;</p>\n<p>Single-day and two-day passes available.</p>"
+  },
+  "end": "2026-01-02T08:00:00.000Z",
+  "flyer": {
+    "url": "https://firebasestorage.googleapis.com/v0/b/getout-4e180.appspot.com/o/uploads%2Fevents%2Fevent-flyer-untitled--1000-x-1000-px---1-.jpg?alt=media&token=1d61075b-d802-49d0-acc5-1ea8e81318a1"
+  },
+  "id": "CDJetYnjnYIcrOiwkZ7H",
+  "location": {
+    "address": {
+      "address_1": "800 North Alameda Street",
+      "city": "Los Angeles",
+      "country": "US",
+      "formattedAddress": "800 North Alameda Street, Los Angeles, CA US 90012",
+      "postal_code": "90012",
+      "region": "CA"
+    },
+    "geometry": {
+      "lat": 34.0560324,
+      "lng": -118.23666
+    },
+    "name": "Union Station",
+    "placeId": null,
+    "timezone": "America/Los_Angeles",
+    "venueId": "AgXKWselsX8tiX4BvScF"
+  },
+  "name": "Union Station Resolutions NYE + NYD NYE 26 LA",
+  "organizer": {
+    "companyId": "fDrEX1Y7w87rPM70r2L3",
+    "followers": 0,
+    "id": "ypXKws54zfWiBmtG84xC",
+    "name": "Joonbug"
+  },
+  "organizerId": "ypXKws54zfWiBmtG84xC",
+  "public": false,
+  "searchTags": [],
+  "sections": [],
+  "slug": "union-station-resolutions-nye-nyd-nye-26-la",
+  "start": "2026-01-01T04:00:00.000Z",
+  "status": "ended",
+  "summary": "Union Station's upscale New Year's 2026 Party in LA at the iconic art deco landmark, offering a prohibition NYE themed party as roaring twenties speakeasy, vintage glamour in downtown Los Angeles.",
+  "tags": [
+    "nye",
+    "holiday-event"
+  ],
+  "ticketPrices": [],
+  "tz": "America/Los_Angeles",
+  "url": "union-station-resolutions-nye-nyd-nye-26-la",
+  "venue": null,
+  "widgets": []
+}

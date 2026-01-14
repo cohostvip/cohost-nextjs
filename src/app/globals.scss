@@ -1,0 +1,40 @@
+@use '../styles/colors' as *;
+@import 'tailwindcss';
+
+@theme {
+  // Backgrounds
+  --color-background: #{$color-background};
+  --color-surface: #{$color-surface};
+  --color-surface-elevated: #{$color-surface-elevated};
+
+  // Primary
+  --color-primary: #{$color-primary};
+  --color-primary-hover: #{$color-primary-hover};
+  --color-primary-muted: #{$color-primary-muted};
+
+  // Accent
+  --color-accent: #{$color-accent};
+  --color-accent-hover: #{$color-accent-hover};
+
+  // Status
+  --color-success: #{$color-success};
+  --color-warning: #{$color-warning};
+  --color-error: #{$color-error};
+
+  // Text
+  --color-text: #{$color-text};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-subtle: #{$color-text-subtle};
+
+  // Borders
+  --color-border: #{$color-border};
+  --color-border-hover: #{$color-border-hover};
+
+  // Fonts
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  @apply bg-background text-text antialiased;
+}
