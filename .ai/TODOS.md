@@ -9,10 +9,22 @@ Reference [event mock data](../__mocks__/eventProfile.mock.json) for example eve
 
 ## Todos
 
-(All tasks completed - see Completed Tasks below)
+(All current tasks completed - see Completed Tasks below)
+
 
 ## Completed Tasks
 
+### Event Profile Page
+- [x] Move event name, location and date from the ticket pane into the main area
+- [x] Hide ticket details unless user clicks on "view details"
+- [x] Render HTML markup in ticket details and event description
+- [x] Show "sold out" badge on tickets that are sold out
+- [x] Show "Free" instead of "$0.00" for free tickets
+- [x] Make event flyer smaller (1:1 ratio) on one side of the screen
+- [x] Add Google Map showing venue location with pin and info window
+- [x] Show event tags as links to `/tags/[tag]` page
+
+### Checkout Flow
 - [x] Add a slick checkout flow for purchasing tickets, using the `cohost-react` SDK.
 - [x] User can add/remove tickets from cart, it should show full price at the bottom of the cart.
 - [x] Add the logic for coupons

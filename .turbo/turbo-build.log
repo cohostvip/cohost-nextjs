@@ -29,9 +29,10 @@ src/app/globals.scss 2:9  root stylesheet
 
 
 
- ✓ Compiled successfully in 5.7s
+ ✓ Compiled successfully in 11.3s
    Running TypeScript ...
    Collecting page data using 11 workers ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
 [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
@@ -46,11 +47,11 @@ src/app/globals.scss 2:9  root stylesheet
 [Cohost SDK] Error(403): {"error":"Invalid or expired token"} { url: 'https://api.cohost.vip/v1/events' }
 Error occurred prerendering page "/events". Read more: https://nextjs.org/docs/messages/prerender-error
 Error [CohostError]: {"error":"Invalid or expired token"}
-    at n.request (.next/server/chunks/ssr/[root-of-the-server]__9b8ea495._.js:1:4378)
-    at async e (.next/server/chunks/ssr/[root-of-the-server]__9b8ea495._.js:1:10004) {
+    at n.request (.next/server/chunks/ssr/[root-of-the-server]__d9bc95e8._.js:1:7016)
+    at async e (.next/server/chunks/ssr/[root-of-the-server]__d9bc95e8._.js:1:12782) {
   errorCode: 'Forbidden',
   statusCode: 403,
-  digest: '3666362698'
+  digest: '3140851785'
 }
 Export encountered an error on /events/page: /events, exiting the build.
  ⨯ Next.js build worker exited with code: 1 and signal: null

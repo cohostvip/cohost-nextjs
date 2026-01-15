@@ -39,12 +39,12 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
 export default async function EventByIdPage({ params }: EventPageProps) {
   const { id } = await params;
 
-  try {
-    const event = await fetchEvent(id);
-    const tickets = await getEventTickets(event.id);
-
-    return <EventDetails event={event} tickets={tickets} />;
-  } catch {
+  const event = await fetchEvent(id).catch(() => null);
+  if (!event) {
     notFound();
   }
+
+  const tickets = await getEventTickets(event.id);
+
+  return <EventDetails event={event} tickets={tickets} />;
 }

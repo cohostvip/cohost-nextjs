@@ -4,6 +4,7 @@ export const routes = {
   home: '/',
   events: '/events',
   event: (id: string) => `/events/${id}`,
+  tag: (tag: string) => `/tags/${encodeURIComponent(tag)}`,
 } as const;
 
 export function resolveEventUrl(event: EventProfile): string {

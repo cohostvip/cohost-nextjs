@@ -37,5 +37,25 @@ export async function getEventTickets(eventId: string): Promise<Ticket[]> {
   return cohostClient.events.tickets(eventId);
 }
 
+/**
+ * Fetch events filtered by tag.
+ */
+export async function getEventsByTag(tag: string): Promise<EventProfile[]> {
+  const events = await cohostClient.events.list();
+  return events.filter((event) => event.tags?.includes(tag));
+}
+
+/**
+ * Get all unique tags from events.
+ */
+export async function getAllTags(): Promise<string[]> {
+  const events = await cohostClient.events.list();
+  const tags = new Set<string>();
+  events.forEach((event) => {
+    event.tags?.forEach((tag) => tags.add(tag));
+  });
+  return Array.from(tags).sort();
+}
+
 // Re-export types for convenience
 export type { EventProfile, Ticket };
