@@ -1,17 +1,20 @@
 'use client';
 
 import { useCohostCheckout, formatCurrency } from '@cohostvip/cohost-react';
+import { CouponForm } from './CouponForm';
 
 interface CartSummaryProps {
   className?: string;
   compact?: boolean;
+  onEditTickets?: () => void;
 }
 
-export function CartSummary({ className, compact }: CartSummaryProps) {
+export function CartSummary({ className, compact, onEditTickets }: CartSummaryProps) {
   const { cartSession } = useCohostCheckout();
 
   const costs = cartSession?.costs;
-  const itemCount = cartSession?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const items = cartSession?.items || [];
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   // Compact mode for mobile - hide when empty, show single line when has items
   if (compact) {
@@ -19,11 +22,24 @@ export function CartSummary({ className, compact }: CartSummaryProps) {
       return null;
     }
     return (
-      <div className={`flex items-center justify-between text-sm ${className || ''}`}>
-        <span className="text-text-muted">
-          {itemCount} {itemCount === 1 ? 'ticket' : 'tickets'}
-        </span>
-        <span className="font-semibold text-text">{formatCurrency(costs?.total)}</span>
+      <div className={`space-y-2 ${className || ''}`}>
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-text-muted">
+              {itemCount} {itemCount === 1 ? 'ticket' : 'tickets'}
+            </span>
+            {onEditTickets && (
+              <button
+                onClick={onEditTickets}
+                className="text-accent hover:underline"
+              >
+                Edit
+              </button>
+            )}
+          </div>
+          <span className="font-semibold text-text">{formatCurrency(costs?.total)}</span>
+        </div>
+        <CouponForm />
       </div>
     );
   }
@@ -40,11 +56,44 @@ export function CartSummary({ className, compact }: CartSummaryProps) {
 
   return (
     <div className={`rounded-lg border border-border bg-surface p-4 ${className || ''}`}>
-      <h3 className="mb-4 text-lg font-semibold text-text">Order Summary</h3>
+      {/* Header with Edit link */}
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-text">Order Summary</h3>
+        {onEditTickets && (
+          <button
+            onClick={onEditTickets}
+            className="text-sm text-accent hover:underline"
+          >
+            Edit
+          </button>
+        )}
+      </div>
 
+      {/* Tickets list */}
+      <div className="space-y-2 border-b border-border pb-3 mb-3">
+        {items
+          .filter((item) => item.quantity > 0)
+          .map((item) => (
+            <div key={item.id} className="flex justify-between text-sm">
+              <span className="text-text-muted">
+                {item.quantity}x {item.offering?.name || 'Ticket'}
+              </span>
+              <span className="text-text-muted">
+                {formatCurrency(item.costs?.total || item.costs?.subtotal)}
+              </span>
+            </div>
+          ))}
+      </div>
+
+      {/* Coupon section */}
+      <div className="border-b border-border pb-3 mb-3">
+        <CouponForm />
+      </div>
+
+      {/* Costs breakdown */}
       <div className="space-y-2 text-sm">
         <div className="flex justify-between text-text-muted">
-          <span>Subtotal ({itemCount} {itemCount === 1 ? 'item' : 'items'})</span>
+          <span>Subtotal</span>
           <span>{formatCurrency(costs.subtotal)}</span>
         </div>
 

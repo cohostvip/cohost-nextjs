@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useCohostClient } from '@cohostvip/cohost-react';
-import { Button, GoogleMap, DateTimeCard, LocationCard, TicketCard, isTicketSoldOut } from '@/components/ui';
+import { Button, GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSoldOut } from '@/components/ui';
+import type { TicketQuantities } from '@/components/ui';
 import { CheckoutModal } from '@/components/checkout';
 import type { EventProfile, Ticket } from '@/lib/api';
 
@@ -17,8 +18,11 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [cartSessionId, setCartSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const pendingQuantitiesRef = useRef<TicketQuantities | null>(null);
 
-  const handleGetTickets = useCallback(async () => {
+  const handleGetTickets = useCallback(async (quantities: TicketQuantities) => {
+    // Store quantities for setting in cart after creation
+    pendingQuantitiesRef.current = quantities;
     setIsLoading(true);
     try {
       const cart = await client.cart.start({
@@ -41,7 +45,7 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
 
   const handleCloseCheckout = useCallback(() => {
     setIsCheckoutOpen(false);
-    setCartSessionId(null);
+    // Keep cartSessionId to preserve selection if user reopens
   }, []);
 
   const hasAvailableTickets = tickets.some((t) => !isTicketSoldOut(t));
@@ -89,17 +93,6 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
             </div>
           )}
 
-          {/* Buy Tickets Button - Mobile & Tablet */}
-          {tickets.length > 0 && (
-            <Button
-              size="lg"
-              className="mt-6 w-full lg:hidden"
-              onClick={handleGetTickets}
-              disabled={isLoading || !hasAvailableTickets}
-            >
-              {isLoading ? 'Loading...' : hasAvailableTickets ? 'Buy Tickets' : 'Sold Out'}
-            </Button>
-          )}
         </div>
 
         {/* Right Column - Event Info */}
@@ -122,23 +115,12 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
 
           {/* Tickets Section */}
           {tickets.length > 0 && (
-            <div>
-              <h2 className="text-xl font-bold text-text mb-4">Tickets</h2>
-              <div className="space-y-3">
-                {tickets.map((ticket) => (
-                  <TicketCard key={ticket.id} ticket={ticket} />
-                ))}
-              </div>
-
-              <Button
-                size="lg"
-                className="w-full mt-6"
-                onClick={handleGetTickets}
-                disabled={isLoading || !hasAvailableTickets}
-              >
-                {isLoading ? 'Loading...' : hasAvailableTickets ? 'Get Tickets' : 'Sold Out'}
-              </Button>
-            </div>
+            <TicketsList
+              tickets={tickets}
+              ticketGroups={(event as any).ticketGroups}
+              onGetTickets={handleGetTickets}
+              isLoading={isLoading}
+            />
           )}
 
           {/* Event Description */}
@@ -174,6 +156,7 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
           isOpen={isCheckoutOpen}
           onClose={handleCloseCheckout}
           cartSessionId={cartSessionId}
+          initialQuantities={pendingQuantitiesRef.current || undefined}
         />
       )}
     </div>

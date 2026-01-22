@@ -3,13 +3,18 @@
 import { useEffect } from 'react';
 import { CheckoutFlow } from './CheckoutFlow';
 
+interface TicketQuantities {
+  [ticketId: string]: number;
+}
+
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
   cartSessionId: string;
+  initialQuantities?: TicketQuantities;
 }
 
-export function CheckoutModal({ isOpen, onClose, cartSessionId }: CheckoutModalProps) {
+export function CheckoutModal({ isOpen, onClose, cartSessionId, initialQuantities }: CheckoutModalProps) {
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -70,7 +75,7 @@ export function CheckoutModal({ isOpen, onClose, cartSessionId }: CheckoutModalP
       <div className="relative z-10 flex h-full flex-col">
         {/* Main content area - centered with max width */}
         <div className="flex flex-1 flex-col overflow-hidden pt-16 md:pt-20">
-          <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} />
+          <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} initialQuantities={initialQuantities} />
         </div>
 
         {/* Footer links */}

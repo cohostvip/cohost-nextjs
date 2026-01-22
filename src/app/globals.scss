@@ -38,3 +38,13 @@
 body {
   @apply bg-background text-text antialiased;
 }
+
+// Global button cursor styles
+button,
+[role="button"],
+a[class*="btn"],
+a[class*="button"],
+.btn,
+.button {
+  cursor: pointer;
+}

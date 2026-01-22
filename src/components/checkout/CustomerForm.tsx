@@ -68,8 +68,6 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
 
   return (
     <div className={`space-y-4 ${className || ''}`}>
-      <h3 className="text-lg font-semibold text-text">Contact Information</h3>
-
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-text">
