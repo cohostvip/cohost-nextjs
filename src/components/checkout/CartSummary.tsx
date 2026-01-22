@@ -4,16 +4,38 @@ import { useCohostCheckout, formatCurrency } from '@cohostvip/cohost-react';
 
 interface CartSummaryProps {
   className?: string;
+  compact?: boolean;
 }
 
-export function CartSummary({ className }: CartSummaryProps) {
+export function CartSummary({ className, compact }: CartSummaryProps) {
   const { cartSession } = useCohostCheckout();
 
   const costs = cartSession?.costs;
   const itemCount = cartSession?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
+  // Compact mode for mobile - hide when empty, show single line when has items
+  if (compact) {
+    if (itemCount === 0) {
+      return null;
+    }
+    return (
+      <div className={`flex items-center justify-between text-sm ${className || ''}`}>
+        <span className="text-text-muted">
+          {itemCount} {itemCount === 1 ? 'ticket' : 'tickets'}
+        </span>
+        <span className="font-semibold text-text">{formatCurrency(costs?.total)}</span>
+      </div>
+    );
+  }
+
+  // Full mode - show empty state when no items
   if (!costs || itemCount === 0) {
-    return null;
+    return (
+      <div className={`rounded-lg border border-border bg-surface p-4 ${className || ''}`}>
+        <h3 className="mb-2 text-lg font-semibold text-text">Order Summary</h3>
+        <p className="text-sm text-text-subtle">Select tickets to see your order</p>
+      </div>
+    );
   }
 
   return (

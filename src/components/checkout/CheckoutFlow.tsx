@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import {
   CohostCheckoutProvider,
   PaymentElementProvider,
@@ -90,93 +90,143 @@ function CheckoutContent({ onClose }: CheckoutContentProps) {
     setError(errorMessage);
   };
 
+  // Confirmation screen
   if (step === 'confirmation') {
     return (
-      <div className="p-6 text-center">
-        <div className="mb-4 text-5xl">🎉</div>
-        <h2 className="mb-2 text-2xl font-bold text-text">Order Confirmed!</h2>
-        <p className="mb-6 text-text-muted">
-          Thank you for your purchase. Your tickets have been sent to your email.
-        </p>
-        {orderResult?.id && (
-          <p className="mb-4 text-sm text-text-subtle">
-            Order ID: {orderResult.id}
+      <div className="flex flex-1 items-center justify-center p-6">
+        <div className="max-w-md text-center">
+          <div className="mb-4 text-5xl">🎉</div>
+          <h2 className="mb-2 text-2xl font-bold text-text">Order Confirmed!</h2>
+          <p className="mb-6 text-text-muted">
+            Thank you for your purchase. Your tickets have been sent to your email.
           </p>
-        )}
-        <Button onClick={onClose}>Close</Button>
+          {orderResult?.id && (
+            <p className="mb-4 text-sm text-text-subtle">
+              Order ID: {orderResult.id}
+            </p>
+          )}
+          <Button onClick={onClose}>Close</Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col">
-      {/* Header */}
-      <div className="border-b border-border p-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-text">
-            {step === 'tickets' && 'Select Tickets'}
-            {step === 'customer' && 'Your Information'}
-            {step === 'payment' && 'Payment'}
-          </h2>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="text-text-muted hover:text-text"
-            >
-              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-        </div>
+    <div className="flex flex-1 flex-col items-center justify-center overflow-hidden">
+      {/* Two-column layout on desktop */}
+      <div className="mx-auto flex w-full max-w-5xl flex-col px-4 md:flex-row md:gap-8 md:px-6">
+        {/* Left column - Main content */}
+        <div className="flex flex-1 flex-col overflow-hidden md:max-w-xl">
+          {/* Step header */}
+          <div className="py-4">
+              <h2 className="text-xl font-bold text-text">
+                {step === 'tickets' && 'Select Tickets'}
+                {step === 'customer' && 'Your Information'}
+                {step === 'payment' && 'Payment'}
+              </h2>
 
-        {/* Step indicator */}
-        <div className="mt-4 flex gap-2">
-          {['tickets', 'customer', 'payment'].map((s, i) => (
-            <div
-              key={s}
-              className={`h-1 flex-1 rounded-full ${
-                ['tickets', 'customer', 'payment'].indexOf(step) >= i
-                  ? 'bg-accent'
-                  : 'bg-border'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+              {/* Step indicator */}
+              <div className="mt-3 flex gap-2">
+                {['tickets', 'customer', 'payment'].map((s, i) => (
+                  <div
+                    key={s}
+                    className={`h-1 flex-1 rounded-full ${
+                      ['tickets', 'customer', 'payment'].indexOf(step) >= i
+                        ? 'bg-accent'
+                        : 'bg-border'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {error && (
-          <div className="mb-4 rounded-md bg-red-500/10 p-3 text-sm text-red-500">
-            {error}
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto">
+            {error && (
+              <div className="mb-4 rounded-md bg-red-500/10 p-3 text-sm text-red-500">
+                {error}
+              </div>
+            )}
+
+            {step === 'tickets' && (
+              <div className="space-y-6">
+                <TicketSelector />
+              </div>
+            )}
+
+            {step === 'customer' && (
+              <CustomerForm onValidChange={setIsCustomerValid} />
+            )}
+
+            {step === 'payment' && (
+              <PaymentElementProvider>
+                <PaymentForm
+                  onTokenized={handlePaymentTokenized}
+                  onError={handlePaymentError}
+                />
+              </PaymentElementProvider>
+            )}
+
+            {/* Desktop action buttons - directly below form content */}
+            <div className="mt-6 hidden md:block">
+              <div className="flex gap-3">
+                {step !== 'tickets' && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => setStep(step === 'payment' ? 'customer' : 'tickets')}
+                    disabled={isProcessing}
+                  >
+                    Back
+                  </Button>
+                )}
+
+                {step === 'tickets' && (
+                  <Button
+                    className="flex-1"
+                    onClick={handleContinueToCustomer}
+                    disabled={itemCount === 0}
+                  >
+                    Continue
+                  </Button>
+                )}
+
+                {step === 'customer' && (
+                  <Button
+                    className="flex-1"
+                    onClick={handleContinueToPayment}
+                    disabled={!isCustomerValid || isProcessing}
+                  >
+                    {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue to Payment'}
+                  </Button>
+                )}
+
+                {step === 'payment' && (
+                  <Button
+                    className="flex-1"
+                    onClick={handlePlaceOrder}
+                    disabled={isProcessing}
+                  >
+                    {isProcessing ? 'Processing...' : `Pay ${formatCurrency(total)}`}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
-        )}
+        </div>
 
-        {step === 'tickets' && (
-          <div className="space-y-6">
-            <TicketSelector />
+        {/* Right column - Order summary (desktop) */}
+        <div className="hidden w-80 shrink-0 py-4 md:block">
+          <div className="sticky top-4 space-y-4">
+            <CartSummary />
             <CouponForm />
           </div>
-        )}
-
-        {step === 'customer' && (
-          <CustomerForm onValidChange={setIsCustomerValid} />
-        )}
-
-        {step === 'payment' && (
-          <PaymentElementProvider>
-            <PaymentForm
-              onTokenized={handlePaymentTokenized}
-              onError={handlePaymentError}
-            />
-          </PaymentElementProvider>
-        )}
+        </div>
       </div>
 
-      {/* Footer */}
-      <div className="border-t border-border p-4">
-        <CartSummary className="mb-4" />
+      {/* Mobile fixed bottom - Order summary */}
+      <div className="border-t border-border bg-surface p-4 md:hidden">
+        <CartSummary compact className="mb-3" />
+        <CouponForm className="mb-3" />
 
         <div className="flex gap-3">
           {step !== 'tickets' && (
@@ -206,7 +256,7 @@ function CheckoutContent({ onClose }: CheckoutContentProps) {
               onClick={handleContinueToPayment}
               disabled={!isCustomerValid || isProcessing}
             >
-              {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue to Payment'}
+              {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue'}
             </Button>
           )}
 

@@ -88,12 +88,24 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
               ))}
             </div>
           )}
+
+          {/* Buy Tickets Button - Mobile & Tablet */}
+          {tickets.length > 0 && (
+            <Button
+              size="lg"
+              className="mt-6 w-full lg:hidden"
+              onClick={handleGetTickets}
+              disabled={isLoading || !hasAvailableTickets}
+            >
+              {isLoading ? 'Loading...' : hasAvailableTickets ? 'Buy Tickets' : 'Sold Out'}
+            </Button>
+          )}
         </div>
 
         {/* Right Column - Event Info */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Date, Time & Location */}
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {/* Date & Location */}
+          <div className="space-y-4">
             <DateTimeCard
               start={event.start}
               end={event.end}
@@ -146,15 +158,12 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
 
           {/* Google Map */}
           {event.location?.geometry && (
-            <div>
-              <h2 className="text-xl font-bold text-text mb-4">Venue Location</h2>
-              <GoogleMap
-                lat={event.location.geometry.lat}
-                lng={event.location.geometry.lng}
-                venueName={event.location.name}
-                address={event.location.address?.formattedAddress}
-              />
-            </div>
+            <GoogleMap
+              lat={event.location.geometry.lat}
+              lng={event.location.geometry.lng}
+              venueName={event.location.name}
+              address={event.location.address?.formattedAddress}
+            />
           )}
         </div>
       </div>

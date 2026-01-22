@@ -29,18 +29,19 @@ export function GoogleMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasApiKey, setHasApiKey] = useState(true);
 
   useEffect(() => {
-    // Check if Google Maps is already loaded
-    if (window.google?.maps) {
-      setMapLoaded(true);
-      return;
-    }
-
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
     if (!apiKey) {
-      setError('Google Maps API key not configured');
+      setHasApiKey(false);
+      return;
+    }
+
+    // Check if Google Maps is already loaded
+    if (window.google?.maps) {
+      setMapLoaded(true);
       return;
     }
 
@@ -186,22 +187,9 @@ export function GoogleMap({
     });
   }, [mapLoaded, lat, lng, venueName, address, zoom]);
 
-  if (error) {
-    return (
-      <div className={`rounded-lg border border-border bg-surface p-8 text-center ${className || ''}`}>
-        <p className="text-text-muted">{error}</p>
-        {address && (
-          <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-block text-accent hover:underline"
-          >
-            View on Google Maps
-          </a>
-        )}
-      </div>
-    );
+  // Don't render anything if no API key or there's an error
+  if (!hasApiKey || error) {
+    return null;
   }
 
   return (

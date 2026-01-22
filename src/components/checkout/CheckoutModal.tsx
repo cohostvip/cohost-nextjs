@@ -43,16 +43,56 @@ export function CheckoutModal({ isOpen, onClose, cartSessionId }: CheckoutModalP
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50">
+      {/* Glass-morphism backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-background/85 backdrop-blur-lg"
         onClick={onClose}
       />
 
-      {/* Modal */}
-      <div className="relative z-10 mx-4 flex h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-2xl">
-        <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} />
+      {/* Logo - absolute top-left */}
+      <div className="absolute left-4 top-4 z-20 md:left-6 md:top-6">
+        <span className="text-xl font-bold text-text">Cohost</span>
+      </div>
+
+      {/* Close button - absolute top-right */}
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-surface/50 text-text-muted transition-colors hover:bg-surface hover:text-text md:right-6 md:top-6"
+        aria-label="Close checkout"
+      >
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      {/* Modal content */}
+      <div className="relative z-10 flex h-full flex-col">
+        {/* Main content area - centered with max width */}
+        <div className="flex flex-1 flex-col overflow-hidden pt-16 md:pt-20">
+          <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} />
+        </div>
+
+        {/* Footer links */}
+        <div className="relative z-10 border-t border-border/50 bg-background/50 px-4 py-3 text-center text-xs text-text-subtle backdrop-blur-sm">
+          <a
+            href="/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-text-muted hover:underline"
+          >
+            Terms of Service
+          </a>
+          <span className="mx-2">·</span>
+          <a
+            href="/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-text-muted hover:underline"
+          >
+            Privacy Policy
+          </a>
+        </div>
       </div>
     </div>
   );

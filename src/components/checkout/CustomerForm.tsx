@@ -72,7 +72,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-muted">
+          <label className="mb-1 block text-sm font-medium text-text">
             First Name
           </label>
           <input
@@ -80,10 +80,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
             value={formData.first}
             onChange={(e) => handleChange('first', e.target.value)}
             onBlur={handleBlur}
-            className={`w-full rounded-md border bg-background px-3 py-2 text-text placeholder:text-text-subtle focus:outline-none focus:ring-1 ${
+            className={`w-full rounded-md border bg-surface px-3 py-2 text-text placeholder:text-text-muted focus:outline-none focus:ring-1 ${
               errors.first
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-border focus:border-accent focus:ring-accent'
+                : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
             placeholder="John"
           />
@@ -93,7 +93,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-text-muted">
+          <label className="mb-1 block text-sm font-medium text-text">
             Last Name
           </label>
           <input
@@ -101,10 +101,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
             value={formData.last}
             onChange={(e) => handleChange('last', e.target.value)}
             onBlur={handleBlur}
-            className={`w-full rounded-md border bg-background px-3 py-2 text-text placeholder:text-text-subtle focus:outline-none focus:ring-1 ${
+            className={`w-full rounded-md border bg-surface px-3 py-2 text-text placeholder:text-text-muted focus:outline-none focus:ring-1 ${
               errors.last
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                : 'border-border focus:border-accent focus:ring-accent'
+                : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
             placeholder="Doe"
           />
@@ -115,7 +115,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-text-muted">
+        <label className="mb-1 block text-sm font-medium text-text">
           Email
         </label>
         <input
@@ -123,10 +123,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
           value={formData.email}
           onChange={(e) => handleChange('email', e.target.value)}
           onBlur={handleBlur}
-          className={`w-full rounded-md border bg-background px-3 py-2 text-text placeholder:text-text-subtle focus:outline-none focus:ring-1 ${
+          className={`w-full rounded-md border bg-surface px-3 py-2 text-text placeholder:text-text-muted focus:outline-none focus:ring-1 ${
             errors.email
               ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : 'border-border focus:border-accent focus:ring-accent'
+              : 'border-text-subtle focus:border-accent focus:ring-accent'
           }`}
           placeholder="john@example.com"
         />
@@ -136,7 +136,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
       </div>
 
       <div>
-        <label className="mb-1 block text-sm font-medium text-text-muted">
+        <label className="mb-1 block text-sm font-medium text-text">
           Phone (optional)
         </label>
         <input
@@ -144,7 +144,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
           value={formData.phone}
           onChange={(e) => handleChange('phone', e.target.value)}
           onBlur={handleBlur}
-          className="w-full rounded-md border border-border bg-background px-3 py-2 text-text placeholder:text-text-subtle focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+          className="w-full rounded-md border border-text-subtle bg-surface px-3 py-2 text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
           placeholder="+1 (555) 123-4567"
         />
       </div>

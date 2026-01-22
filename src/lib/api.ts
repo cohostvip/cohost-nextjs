@@ -1,4 +1,4 @@
-import { createCohostClient, type EventProfile, type Ticket } from '@cohostvip/cohost-node';
+import { createCohostClient, PaginatedResponse, type EventProfile, type Ticket } from '@cohostvip/cohost-node';
 
 /**
  * Centralized Cohost API client instance.
@@ -11,7 +11,7 @@ export const cohostClient = createCohostClient({
 /**
  * Fetch all events from the API.
  */
-export async function getEvents(): Promise<EventProfile[]> {
+export async function getEvents(): Promise<PaginatedResponse<EventProfile>> {
   return cohostClient.events.list();
 }
 
@@ -26,8 +26,8 @@ export async function getEvent(id: string): Promise<EventProfile> {
  * Fetch a single event by URL slug.
  */
 export async function getEventByUrl(url: string): Promise<EventProfile | null> {
-  const events = await cohostClient.events.list();
-  return events.find((event) => event.url === url) ?? null;
+  const e = await cohostClient.events.fetch(url);
+  return e || null;
 }
 
 /**
@@ -41,17 +41,17 @@ export async function getEventTickets(eventId: string): Promise<Ticket[]> {
  * Fetch events filtered by tag.
  */
 export async function getEventsByTag(tag: string): Promise<EventProfile[]> {
-  const events = await cohostClient.events.list();
-  return events.filter((event) => event.tags?.includes(tag));
+  const response = await cohostClient.events.list();
+  return response.results.filter((event) => event.tags?.includes(tag));
 }
 
 /**
  * Get all unique tags from events.
  */
 export async function getAllTags(): Promise<string[]> {
-  const events = await cohostClient.events.list();
+  const response = await cohostClient.events.list();
   const tags = new Set<string>();
-  events.forEach((event) => {
+  response.results.forEach((event) => {
     event.tags?.forEach((tag) => tags.add(tag));
   });
   return Array.from(tags).sort();
