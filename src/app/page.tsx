@@ -5,12 +5,24 @@ import { getEvents } from '@/lib/api';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const events = await getEvents();
+  let events: Awaited<ReturnType<typeof getEvents>> | null = null;
+
+  try {
+    events = await getEvents();
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+  }
 
   return (
     <>
       <Hero />
-      <FeaturedEvents events={events.results} />
+      {events ? (
+        <FeaturedEvents events={events.results} />
+      ) : (
+        <div className="py-16 text-center">
+          <p className="text-gray-600">Unable to load events. Please try again later.</p>
+        </div>
+      )}
     </>
   );
 }

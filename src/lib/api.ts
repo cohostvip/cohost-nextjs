@@ -1,4 +1,4 @@
-import { createCohostClient, PaginatedResponse, type EventProfile, type Ticket } from '@cohostvip/cohost-node';
+import { createCohostClient, PaginatedResponse, type EventProfile, type Ticket, type Order } from '@cohostvip/cohost-node';
 
 /**
  * Centralized Cohost API client instance.
@@ -57,5 +57,12 @@ export async function getAllTags(): Promise<string[]> {
   return Array.from(tags).sort();
 }
 
+/**
+ * Fetch a single order by ID.
+ */
+export async function getOrder(id: string): Promise<Order> {
+  return cohostClient.orders.fetch(id);
+}
+
 // Re-export types for convenience
-export type { EventProfile, Ticket };
+export type { EventProfile, Ticket, Order };

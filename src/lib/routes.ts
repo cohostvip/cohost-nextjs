@@ -4,6 +4,7 @@ export const routes = {
   home: '/',
   events: '/events',
   event: (id: string) => `/events/${id}`,
+  order: (id: string) => `/orders/${id}`,
   tag: (tag: string) => `/tags/${encodeURIComponent(tag)}`,
 } as const;
 

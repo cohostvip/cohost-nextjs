@@ -83,7 +83,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
-            placeholder="John"
+            placeholder="Jane"
           />
           {errors.first && (
             <p className="mt-1 text-xs text-red-500">{errors.first}</p>
@@ -104,7 +104,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
                 : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
-            placeholder="Doe"
+            placeholder="Smith"
           />
           {errors.last && (
             <p className="mt-1 text-xs text-red-500">{errors.last}</p>
