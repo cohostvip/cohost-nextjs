@@ -1,0 +1,202 @@
+{
+  "agreements": {
+    "agreedToOrganizerTerms": true,
+    "agreedToTerms": true,
+    "emailOptIn": false,
+    "textOptIn": false
+  },
+  "answers": {},
+  "companyId": "acme-corp",
+  "context": {
+    "cartSessionId": "Hjn8OwUR5YtbZX2rhHXK",
+    "forward": {
+      "cid": "evt_02whQu3e1koABNLbbw6d",
+      "of": "XD0rlumvjAGkoli1csG8:1",
+      "origin": "joonbug.com",
+      "referrer": "https://joonbug.com/newyork/upcoming-events/superior-ingredients-easy-tiger-party-dj-music-23#tickets"
+    },
+    "ipAddresses": [
+      "34.96.49.200",
+      "66.102.8.194"
+    ],
+    "originDomain": "joonbug.com",
+    "referrer": "https://joonbug.com/newyork/upcoming-events/superior-ingredients-easy-tiger-party-dj-music-23#tickets",
+    "tracking": {
+      "ctm_source": "",
+      "utm_source": ""
+    },
+    "uid": null
+  },
+  "contextId": "evt_02whQu3e1koABNLbbw6d",
+  "costs": {
+    "delivery": "USD,0",
+    "discount": "USD,0",
+    "fee": "USD,0",
+    "gross": "USD,0",
+    "preDiscount": "USD,0",
+    "subtotal": "USD,0",
+    "tax": "USD,0",
+    "total": "USD,0"
+  },
+  "coupons": [],
+  "created": "2025-08-18T18:50:25.144Z",
+  "currency": "USD",
+  "customer": {
+    "birthdate": "2003-11-25",
+    "email": "avascorzari1@gmail.com",
+    "first": "Ava",
+    "last": "Scorzari",
+    "name": "Ava Scorzari",
+    "phone": "+16314329407",
+    "uid": "DYNuq4repzuTroSQSEWb"
+  },
+  "forwarded": {},
+  "id": "0R6VGib8QJdZuLdoJF1Z",
+  "items": [
+    {
+      "costComponents": [],
+      "costs": {
+        "cost": "USD,0",
+        "delivery": "USD,0",
+        "discount": "USD,0",
+        "fee": "USD,0",
+        "gross": "USD,0",
+        "preDiscount": "USD,0",
+        "subtotal": "USD,0",
+        "tax": "USD,0",
+        "total": "USD,0"
+      },
+      "details": "",
+      "id": "092efffb-646e-4f81-9ddb-0add4b5af621",
+      "includedWithItemId": null,
+      "meta": {},
+      "offering": {
+        "category": "General Admission",
+        "costs": {
+          "cost": "USD,0",
+          "delivery": "USD,295",
+          "fee": "USD,0",
+          "gross": "USD,0",
+          "tax": "USD,0",
+          "total": "USD,0"
+        },
+        "description": "",
+        "id": "XD0rlumvjAGkoli1csG8",
+        "maximumQuantity": 10,
+        "minimumQuantity": 1,
+        "name": "FREE RSVP ENTRY BEFORE 11 PM",
+        "priceCategory": "paid",
+        "refId": "10bd40a4-79ff-11f0-bf0b-42010a542002",
+        "refPath": "events/02whQu3e1koABNLbbw6d/tickets/XD0rlumvjAGkoli1csG8",
+        "sorting": 1,
+        "source": "joonbug",
+        "status": "live",
+        "type": "admission"
+      },
+      "offeringId": "XD0rlumvjAGkoli1csG8",
+      "offeringType": "admission",
+      "options": null,
+      "purchaseGroupId": null,
+      "quantity": 1,
+      "tableCommitmentId": null
+    }
+  ],
+  "meta": {
+    "cartSessionId": "Hjn8OwUR5YtbZX2rhHXK",
+    "costComponents": [
+      {
+        "base": "order",
+        "bucket": "delivery",
+        "cap": {
+          "op": "cap",
+          "type": "percentage",
+          "value": 0
+        },
+        "currency": "*",
+        "details": {
+          "description": "",
+          "name": "E-Ticket"
+        },
+        "enabled": true,
+        "id": "jbETicket",
+        "name": "jb-e-ticket",
+        "ops": [
+          {
+            "op": "*",
+            "value": 0
+          },
+          {
+            "op": "+",
+            "value": 295
+          }
+        ],
+        "payer": "attendee",
+        "planId": "jb-special-plan",
+        "recipient": "organizer",
+        "rules": []
+      },
+      {
+        "base": "item",
+        "bucket": "fee",
+        "cap": {
+          "op": "cap",
+          "type": "percentage",
+          "value": 0
+        },
+        "currency": "*",
+        "details": {
+          "description": "",
+          "name": "Processing Fee"
+        },
+        "enabled": true,
+        "id": "jbProcessingFee",
+        "name": "jb_processing_fee",
+        "ops": [
+          {
+            "op": "*",
+            "value": 0.11
+          },
+          {
+            "op": "+",
+            "value": 0
+          }
+        ],
+        "payer": "attendee",
+        "planId": "jb-special-plan",
+        "recipient": "organizer",
+        "rules": []
+      }
+    ],
+    "resolvedContext": {
+      "config": {
+        "gatewayId": "JguAD5fPsdgySGB1Obg6"
+      },
+      "end": "2025-08-24T07:00:00.000Z",
+      "id": "02whQu3e1koABNLbbw6d",
+      "location": {
+        "address": null,
+        "geometry": null,
+        "name": "EASY TIGER",
+        "placeId": null,
+        "timezone": "America/New_York",
+        "venueId": "YKlw8HARD2jZn98vKcpR"
+      },
+      "logo": {
+        "url": "https://firebasestorage.googleapis.com/v0/b/getout-4e180.appspot.com/o/uploads%2Fevents%2Fevent-flyer-easy-tiger-8_23-final-fr--2-.png?alt=media&token=c6e8d482-25c4-4859-9ad1-26936f860da3"
+      },
+      "start": "2025-08-24T02:00:00.000Z",
+      "title": "EASY TIGER Speakeasy"
+    },
+    "source": "cartSession",
+    "stale": {
+      "hard": 1755543875861,
+      "idle": 600000,
+      "soft": 1755543575861
+    }
+  },
+  "orderNumber": "25737887930",
+  "organizerId": "ypXKws54zfWiBmtG84xC",
+  "status": "placed",
+  "uid": "DYNuq4repzuTroSQSEWb",
+  "version": "2025-04-15"
+}

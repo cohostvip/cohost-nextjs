@@ -1,0 +1,304 @@
+{
+  "agreements": {
+    "agreedToOrganizerTerms": true,
+    "agreedToTerms": true,
+    "emailOptIn": false,
+    "textOptIn": false
+  },
+  "answers": {},
+  "companyId": "acme-corp",
+  "context": {
+    "cartSessionId": "VGs7NpCA2YZJSN8wxyoV",
+    "forward": {
+      "cid": "evt_test-event",
+      "of": "iklDCcHZvsdOLyarHaLT:2",
+      "origin": "joonbug.com",
+      "referrer": "https://joonbug.com/newyork/newyearseve/el-nico-rooftop-nye-event-williamsburg-penny-hotel#tickets"
+    },
+    "ipAddresses": [
+      "34.34.225.227",
+      "66.102.8.232"
+    ],
+    "originDomain": "joonbug.com",
+    "referrer": "https://joonbug.com/newyork/newyearseve/el-nico-rooftop-nye-event-williamsburg-penny-hotel#tickets",
+    "tracking": {
+      "ctm_source": "",
+      "utm_source": ""
+    },
+    "uid": null
+  },
+  "contextId": "evt_test-event",
+  "costs": {
+    "delivery": "USD,295",
+    "discount": "USD,0",
+    "fee": "USD,2178",
+    "gross": "USD,22273",
+    "preDiscount": "USD,19800",
+    "subtotal": "USD,19800",
+    "tax": "USD,0",
+    "total": "USD,22273"
+  },
+  "coupons": [],
+  "created": "2025-11-07T15:40:45.446Z",
+  "currency": "USD",
+  "customer": {
+    "billingAddress": {
+      "address_1": "12 Bemrose Gate",
+      "city": "Hope Valley",
+      "country": "GB",
+      "first": "MISS",
+      "last": "HOBBS",
+      "postal_code": "S330AE",
+      "region": "Derbyshire"
+    },
+    "birthdate": "2001-04-07",
+    "email": "ehob1358@icloud.com",
+    "first": "Estelle",
+    "last": "Hobbs",
+    "name": "Estelle Hobbs",
+    "phone": "+447549603676",
+    "uid": "ON2EobVkneDQ2aSzdQzb"
+  },
+  "forwarded": {},
+  "id": "test-order-with-group",
+  "items": [
+    {
+      "costComponents": [],
+      "costs": {
+        "cost": "USD,9900",
+        "delivery": "USD,0",
+        "discount": "USD,0",
+        "fee": "USD,1089",
+        "gross": "USD,21978",
+        "preDiscount": "USD,21978",
+        "subtotal": "USD,19800",
+        "tax": "USD,0",
+        "total": "USD,21978"
+      },
+      "details": "",
+      "id": "36c7c16f-4965-47e8-9c00-0edb96b5dcc9",
+      "includedWithItemId": null,
+      "meta": {},
+      "offering": {
+        "category": "General Admission",
+        "config": {
+          "groups": {
+            "autoGenerateGroupId": true,
+            "enabled": true
+          }
+        },
+        "costs": {
+          "cost": "USD,9900",
+          "delivery": "USD,295",
+          "fee": "USD,1089",
+          "gross": "USD,10989",
+          "tax": "USD,0",
+          "total": "USD,10989"
+        },
+        "description": "<ul>\n        <li>Admits 1 Seated VIP guest</li>\n        <li>Multi-hour Open Bar (VIP bottle service not included)</li>\n        <li>Live DJ performance</li>\n        <li>DJ-led countdown to the New Year</li>\n        <li>Complimentary Midnight Champagne Toast</li>\n        <li>Seated VIP ticket holders have a reserved seat for the event</li>\n        <li>Seated VIP seats may be a bench, banquette, dining chair, bar stool, etc.</li>\n        <li>Pending availability, best efforts will be made for groups to be seated together</li>\n        <li>Seated VIP seats may or may not include a table</li>\n        <li>Seated VIP accommodates any group size</li>\n        <li>E-tickets only are accepted for entry | scanned at the door</li>\n        <li>Must be 21+</li>\n    </ul>",
+        "id": "iklDCcHZvsdOLyarHaLT",
+        "name": "Seated VIP",
+        "refPath": "events/3S91k91A6qEmPYXKufyN/tickets/iklDCcHZvsdOLyarHaLT",
+        "sorting": 3,
+        "type": "admission"
+      },
+      "offeringId": "iklDCcHZvsdOLyarHaLT",
+      "offeringType": "admission",
+      "options": {
+        "groupSize": 2
+      },
+      "purchaseGroupId": "EHOBBS3676",
+      "quantity": 2,
+      "tableCommitmentId": null
+    }
+  ],
+  "meta": {
+    "cartSessionId": "VGs7NpCA2YZJSN8wxyoV",
+    "contextId": "evt_test-event",
+    "costComponents": [
+      {
+        "base": "order",
+        "bucket": "delivery",
+        "cap": {
+          "op": "cap",
+          "type": "percentage",
+          "value": 0
+        },
+        "currency": "*",
+        "details": {
+          "description": "",
+          "name": "E-Ticket"
+        },
+        "enabled": true,
+        "id": "jbETicket",
+        "name": "jb-e-ticket",
+        "ops": [
+          {
+            "op": "*",
+            "value": 0
+          },
+          {
+            "op": "+",
+            "value": 295
+          }
+        ],
+        "payer": "attendee",
+        "planId": "jb-special-plan",
+        "recipient": "organizer",
+        "rules": []
+      },
+      {
+        "base": "item",
+        "bucket": "fee",
+        "cap": {
+          "op": "cap",
+          "type": "percentage",
+          "value": 0
+        },
+        "currency": "*",
+        "details": {
+          "description": "",
+          "name": "Processing Fee"
+        },
+        "enabled": true,
+        "id": "jbProcessingFee",
+        "name": "jb_processing_fee",
+        "ops": [
+          {
+            "op": "*",
+            "value": 0.11
+          },
+          {
+            "op": "+",
+            "value": 0
+          }
+        ],
+        "payer": "attendee",
+        "planId": "jb-special-plan",
+        "recipient": "organizer",
+        "rules": []
+      }
+    ],
+    "paymentIntent": {
+      "amount": 22273,
+      "apiLoginId": "23H5Pycu",
+      "currency": "usd",
+      "id": "VGs7NpCA2YZJSN8wxyoV-JguAD5fPsdgySGB1Obg6",
+      "implementationId": "authnet@1.0.0",
+      "name": "Primary Auth.net",
+      "provider": "authnet",
+      "publicClientKey": "7zpRRmT3jDLCBAU4FPspwgxKMcFeefW2q236p9vfCfD9hVhS9L3q58sXf4KbGk3u",
+      "type": "authnet"
+    },
+    "resolvedContext": {
+      "config": {
+        "gatewayId": "JguAD5fPsdgySGB1Obg6"
+      },
+      "end": "2026-01-01T07:00:00.000Z",
+      "id": "3S91k91A6qEmPYXKufyN",
+      "location": {
+        "address": {
+          "address_1": "288 N 8th St",
+          "city": "Brooklyn",
+          "country": "United States",
+          "formattedAddress": "288 N 8th St Brooklyn NY United States  11211",
+          "postal_code": "11211",
+          "region": "NY"
+        },
+        "geometry": {
+          "lat": 40.71562371538433,
+          "lng": -73.95278676088503
+        },
+        "name": "El Nico Rooftop",
+        "placeId": null,
+        "timezone": "America/New_York",
+        "venueId": "7N2B7REbV7V0wspnA5Xq"
+      },
+      "logo": {
+        "url": "https://firebasestorage.googleapis.com/v0/b/getout-4e180.appspot.com/o/uploads%2Fevents%2Fevent-flyer-nyc-williamsburg-nye-penny-hotel-el-nico-square.jpg?alt=media&token=e31f4f55-9d70-418b-a89c-54e72558cdb1"
+      },
+      "start": "2026-01-01T01:00:00.000Z",
+      "title": "Bklyn  NYE 26 El Nico Rooftop Williamsburg"
+    },
+    "source": "cartSession",
+    "stale": {
+      "hard": 1762530692751,
+      "idle": 600000,
+      "soft": 1762530392751
+    },
+    "transaction": {
+      "amount": 22273,
+      "contextId": "VGs7NpCA2YZJSN8wxyoV",
+      "created": "2025-11-07T15:40:44.965Z",
+      "currency": "usd",
+      "method": "card",
+      "paymentMethod": {
+        "card": {
+          "brand": "AmericanExpress",
+          "country": "US",
+          "exp_month": 0,
+          "exp_year": 0,
+          "last4": "1006",
+          "network": "AmericanExpress"
+        },
+        "type": "card"
+      },
+      "provider": "authnet",
+      "raw": {
+        "messages": {
+          "message": [
+            {
+              "code": "I00001",
+              "text": "Successful."
+            }
+          ],
+          "resultCode": "Ok"
+        },
+        "refId": "29231296375",
+        "transactionResponse": {
+          "SupplementalDataQualificationIndicator": 0,
+          "accountNumber": "XXXX1006",
+          "accountType": "AmericanExpress",
+          "authCode": "206840",
+          "avsResultCode": "Y",
+          "cavvResultCode": "",
+          "cvvResultCode": "M",
+          "messages": [
+            {
+              "code": "1",
+              "description": "This transaction has been approved."
+            }
+          ],
+          "networkTransId": "016396951211063",
+          "refTransID": "",
+          "responseCode": "1",
+          "testRequest": "0",
+          "transHash": "",
+          "transHashSha2": "6811282D01B4C467ADEFA253B33D8494310A15B7FBF80AFEABA2481D8E00DBC67796C4A8121F3A32A7F98B3348F69D1AC5183A3A31D265E70297E91096FFA5D2",
+          "transId": "121333889270",
+          "userFields": [
+            {
+              "name": "cartSessionId",
+              "value": "VGs7NpCA2YZJSN8wxyoV"
+            },
+            {
+              "name": "uid",
+              "value": "ON2EobVkneDQ2aSzdQzb"
+            },
+            {
+              "name": "contextName",
+              "value": "Bklyn  NYE 26 El Nico Rooftop Williamsburg"
+            }
+          ]
+        }
+      },
+      "status": "approved",
+      "transId": "121333889270"
+    }
+  },
+  "orderNumber": "29231296375",
+  "organizerId": "ypXKws54zfWiBmtG84xC",
+  "status": "placed",
+  "uid": "ON2EobVkneDQ2aSzdQzb",
+  "version": "2025-04-15"
+}
