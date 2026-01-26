@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   CohostCheckoutProvider,
   PaymentElementProvider,
   useCohostCheckout,
-  formatCurrency,
 } from '@cohostvip/cohost-react';
 import { Button } from '@/components/ui';
 import { CartSummary } from './CartSummary';
@@ -25,38 +24,41 @@ interface CheckoutContentProps {
 }
 
 function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
-  const { cartSession, placeOrder, processPayment, incrementItem, decrementItem } = useCohostCheckout();
+  const { cartSession, placeOrder, processPayment, updateItem } = useCohostCheckout();
   const [step, setStep] = useState<CheckoutStep>('customer');
   const [isCustomerValid, setIsCustomerValid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [orderResult, setOrderResult] = useState<any>(null);
-  const [hasSetInitialQuantities, setHasSetInitialQuantities] = useState(false);
+  const initialQuantitiesSetRef = useRef(false);
 
   // Set initial quantities when cart session is available
   useEffect(() => {
-    if (cartSession?.items && initialQuantities && !hasSetInitialQuantities) {
-      const setQuantities = async () => {
-        for (const item of cartSession.items) {
-          const targetQty = initialQuantities[item.offering?.id] || 0;
-          const currentQty = item.quantity;
-
-          // Increment or decrement to reach target quantity
-          if (targetQty > currentQty) {
-            for (let i = 0; i < targetQty - currentQty; i++) {
-              await incrementItem(item.id);
-            }
-          } else if (targetQty < currentQty) {
-            for (let i = 0; i < currentQty - targetQty; i++) {
-              await decrementItem(item.id);
-            }
-          }
-        }
-        setHasSetInitialQuantities(true);
-      };
-      setQuantities();
+    if (!cartSession?.items || !initialQuantities || initialQuantitiesSetRef.current) {
+      return;
     }
-  }, [cartSession?.items, initialQuantities, hasSetInitialQuantities, incrementItem, decrementItem]);
+
+    // Mark as set immediately to prevent re-runs
+    initialQuantitiesSetRef.current = true;
+
+    const setQuantities = async () => {
+      // Build a list of updates needed based on initial cart state
+      const updates = cartSession.items
+        .map((item) => ({
+          itemId: item.id,
+          targetQty: initialQuantities[item.offering?.id] || 0,
+          currentQty: item.quantity,
+        }))
+        .filter(({ targetQty, currentQty }) => targetQty !== currentQty);
+
+      // Apply updates sequentially (each updateItem returns updated cart)
+      for (const { itemId, targetQty } of updates) {
+        await updateItem(itemId, targetQty);
+      }
+    };
+
+    setQuantities();
+  }, [cartSession?.items, initialQuantities, updateItem]);
 
   const itemCount = cartSession?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
   const total = cartSession?.costs?.total;
@@ -91,17 +93,17 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
     }
   };
 
-  const handlePaymentTokenized = async (tokenData: any) => {
+  const handlePaymentSuccess = async (paymentIntent: any) => {
     setIsProcessing(true);
     setError(null);
 
     try {
-      await processPayment(tokenData);
+      // Payment already confirmed by Stripe, now place the order
       const result = await placeOrder();
       setOrderResult(result);
       setStep('confirmation');
     } catch (err: any) {
-      setError(err?.message || 'Payment failed');
+      setError(err?.message || 'Failed to complete order');
     } finally {
       setIsProcessing(false);
     }
@@ -166,7 +168,7 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
             {step === 'payment' && (
               <PaymentElementProvider>
                 <PaymentForm
-                  onTokenized={handlePaymentTokenized}
+                  onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
                 />
               </PaymentElementProvider>
@@ -194,16 +196,7 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
                     {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue to Payment'}
                   </Button>
                 )}
-
-                {step === 'payment' && (
-                  <Button
-                    className="flex-1"
-                    onClick={handlePlaceOrder}
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? 'Processing...' : `Pay ${formatCurrency(total)}`}
-                  </Button>
-                )}
+                {/* Payment submit button is integrated in PaymentForm with Stripe Elements */}
               </div>
             </div>
           </div>
@@ -242,16 +235,7 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
               {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue'}
             </Button>
           )}
-
-          {step === 'payment' && (
-            <Button
-              className="flex-1"
-              onClick={handlePlaceOrder}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Processing...' : `Pay ${formatCurrency(total)}`}
-            </Button>
-          )}
+          {/* Payment submit button is integrated in PaymentForm with Stripe Elements */}
         </div>
       </div>
     </div>
