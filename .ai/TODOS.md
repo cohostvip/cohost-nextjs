@@ -8,49 +8,67 @@ Reference [event mock data](../__mocks__/eventProfile.mock.json) for example eve
 [Event profile component](../src/app/events/[id]/page.tsx)
 
 
-## Global design notes
+## Order confirmation / profile page.
 
-All buttons, wheether they are link button, or a full button must use the pointer cursor on hover.
+After a user has placed an order, and perhaps from a profile, they will be able to view their order details, download tickets, and see event information.
 
+### Mock 
+Reference [simple order mock](../__mocks__/order-artifact-1.json)
+[order with group id](../__mocks__/order-artifact-2.json)
 
+Create a page to view the order. 
 
-## Event profile page changes
+### Page path
 
-### Tickets list
-- wrap the list of ticket and the "get tickets" button in a card with some padding and border radius
-- "Tickets" shold look like a card header with bottom border
-- ticket list item:
-  - first row justify between:
-    - left: line1: ticket name
-            line2: price (incl. fee)
-    - right: qty button
-  - second row: ticket details snippet, clamped to 3 lines with ellipsis. if longer it will have a button to view more, which will launch the modal with more details
-- Review latest changes from root monorepo - [02-ticket-groups](../../../.plan/projects/02-ticket-groups.md). if event has ticket groups, render tickets grouped by ticket groups.
-- Create stories for grouped tickets and ungrouped tickets
+The page path should be `/orders/[orderId]/page.tsx`
 
-## Checkout flow Changes
+### Page vs component
 
-Let's remove the ticket selector from the checkout modal.
-The ticket will be selected beforehand and the modal will be opened with the ticket selected.
-The ticket will be shown in the order summary, and the left hand side will launch the the customer info as the first step, leading into the payment form.
+The page should be minimal, it's job is to fetch the order data based on the orderId from the path, and pass it to a component that will render the order details.
 
-Remove the steps indicator, show only the step title, and the form.
+### Component guidelines 
 
-### Order summay changes
-
-Add `edit` above the tickets in summary, for now clicking it will close the modal, allowing the user to edit their ticket selection.
-Make sure their current selection is preserved.
-
-Move the coupons into the summary, between the tickets and the total.
-
+- Create a new folder `src/components/OrderDetails/` for the order details component.
+- Create small single responsibility sub-components as needed under the `OrderDetails` folder.
 
 
 
 ## Todos
 
-[ ] Set up Storybook and create stories for grouped and ungrouped tickets (requires Storybook installation)
+[x] Create the order details page at path `/orders/[orderId]/page.tsx`
+[x] Create the `OrderDetails` component and sub-components to render the order details.
+[x] Fetch order data using the `@cohostvip/cohost-node` API client based on the `orderId` from the path.
+[x] Render order information, tickets, event details, and download links in the `OrderDetails` component.
+[x] install storybook and configure it for the project
+[x] Set up Storybook and create stories the different componenets created for the event profile page and checkout flow.
 
 ## Recently Completed
+
+- [x] Storybook Setup:
+  - Installed Storybook v10.2 with Vite builder and nextjs-vite framework
+  - Configured `.storybook/preview.ts` with global styles and dark theme
+  - Created stories for all OrderDetails components:
+    - `OrderDetails.stories.tsx` - Full component with mock order data
+    - `OrderHeader.stories.tsx` - Different status states (placed, completed, cancelled, etc.)
+    - `EventInfoCard.stories.tsx` - With/without address, logo, end time
+    - `OrderItemsList.stories.tsx` - Single/multiple items, with group ID
+    - `OrderSummary.stories.tsx` - Various cost breakdowns (free, with discount, with tax)
+    - `CustomerInfo.stories.tsx` - With/without phone
+  - Scripts: `npm run storybook` (port 6006), `npm run build-storybook`
+
+- [x] Order Details Page Implementation:
+  - Created `src/app/orders/[orderId]/page.tsx` with metadata generation
+  - Added `getOrder()` API function and `Order` type to `src/lib/api.ts`
+  - Added `order` route helper to `src/lib/routes.ts`
+  - Created `src/lib/formatCurrency.ts` utility for "USD,cents" format
+  - Created `src/components/OrderDetails/` with sub-components:
+    - `OrderDetails.tsx` - Main layout with responsive two-column grid
+    - `OrderHeader.tsx` - Order number, status badge, date
+    - `EventInfoCard.tsx` - Event info from resolvedContext
+    - `OrderItemsList.tsx` - Tickets/items with quantities and group IDs
+    - `OrderSummary.tsx` - Cost breakdown (subtotal, fees, delivery, total)
+    - `CustomerInfo.tsx` - Collapsible customer information
+
 
 - [x] Update global styles for buttons to use pointer cursor on hover
 - [x] Complete changes to event profile page:
