@@ -2,7 +2,12 @@
 
 import { useState, useMemo } from 'react';
 import { loadStripe, Stripe, PaymentIntent } from '@stripe/stripe-js';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import {
+  Elements,
+  CardElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
 import { usePaymentElement } from '@cohostvip/cohost-react';
 
 interface PaymentFormProps {
@@ -21,8 +26,35 @@ const getStripe = (publishableKey: string) => {
   return stripeCache.get(publishableKey)!;
 };
 
+// Style for the combined CardElement
+const cardElementOptions = {
+  style: {
+    base: {
+      color: '#fafafa',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      fontSize: '16px',
+      fontWeight: '500',
+      '::placeholder': {
+        color: '#a3a3a3',
+      },
+    },
+    invalid: {
+      color: '#ef4444',
+    },
+  },
+  hidePostalCode: true,
+};
+
 // Inner form component that uses Stripe hooks
-function CheckoutForm({ onSuccess, onError }: { onSuccess?: (result: PaymentIntent) => void; onError?: (error: string) => void }) {
+function CheckoutForm({
+  onSuccess,
+  onError,
+  clientSecret,
+}: {
+  onSuccess?: (result: PaymentIntent) => void;
+  onError?: (error: string) => void;
+  clientSecret: string;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -35,15 +67,18 @@ function CheckoutForm({ onSuccess, onError }: { onSuccess?: (result: PaymentInte
       return;
     }
 
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) {
+      return;
+    }
+
     setIsProcessing(true);
     setErrorMessage(null);
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/checkout/complete`,
+    const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: cardElement,
       },
-      redirect: 'if_required',
     });
 
     if (error) {
@@ -58,13 +93,13 @@ function CheckoutForm({ onSuccess, onError }: { onSuccess?: (result: PaymentInte
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement
-        options={{
-          layout: 'tabs',
-        }}
-      />
+      {/* Single combined card input field */}
+      <div className="rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3">
+        <CardElement options={cardElementOptions} />
+      </div>
+
       {errorMessage && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600">
+        <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400">
           {errorMessage}
         </div>
       )}
@@ -82,10 +117,6 @@ function CheckoutForm({ onSuccess, onError }: { onSuccess?: (result: PaymentInte
 export function PaymentForm({ className, onSuccess, onError }: PaymentFormProps) {
   const { paymentIntent, isLoading } = usePaymentElement();
 
-  // Debug: log payment intent data
-  if (paymentIntent) {
-    console.log('[PaymentForm] paymentIntent:', paymentIntent);
-  }
 
   // Memoize stripe instance based on publishable key
   const pk = paymentIntent?.pk;
@@ -96,84 +127,45 @@ export function PaymentForm({ className, onSuccess, onError }: PaymentFormProps)
     return null;
   }, [pk]);
 
-  if (isLoading) {
+  if (isLoading || !stripeInstance) {
     return (
-      <div className={`space-y-4 ${className || ''}`}>
-        <h3 className="text-lg font-semibold text-text">Payment Information</h3>
-        <div className="flex items-center justify-center py-8">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
-          <span className="ml-3 text-text-muted">Loading payment options...</span>
+      <div className={`space-y-3 ${className || ''}`}>
+        <label className="block text-sm font-medium text-text">Card</label>
+        <div className="flex items-center rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3">
+          <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent"></div>
+          <span className="ml-2 text-sm text-text-muted">Loading...</span>
         </div>
       </div>
     );
   }
 
-  if (!paymentIntent) {
+  if (!paymentIntent || !paymentIntent.client_secret || !paymentIntent.pk) {
     return (
-      <div className={`space-y-4 ${className || ''}`}>
-        <h3 className="text-lg font-semibold text-text">Payment Information</h3>
-        <div className="rounded-md bg-red-50 p-4 text-red-600">
-          Unable to load payment information. Please try again.
+      <div className={`space-y-3 ${className || ''}`}>
+        <label className="block text-sm font-medium text-text">Card</label>
+        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+          Unable to load payment. Please try again.
         </div>
       </div>
     );
   }
-
-  if (!paymentIntent.client_secret || !paymentIntent.pk) {
-    return (
-      <div className={`space-y-4 ${className || ''}`}>
-        <h3 className="text-lg font-semibold text-text">Payment Information</h3>
-        <div className="rounded-md bg-yellow-50 p-4 text-yellow-700">
-          Payment configuration is incomplete. Missing: {!paymentIntent.client_secret ? 'client_secret ' : ''}{!paymentIntent.pk ? 'publishable_key' : ''}
-        </div>
-        <details className="mt-4">
-          <summary className="cursor-pointer text-sm text-text-muted">Debug: Payment Intent Data</summary>
-          <pre className="mt-2 overflow-auto rounded-md bg-gray-100 p-4 text-xs text-gray-800 dark:bg-gray-800 dark:text-gray-200">
-            {JSON.stringify(paymentIntent, null, 2)}
-          </pre>
-        </details>
-      </div>
-    );
-  }
-
-  if (!stripeInstance) {
-    return (
-      <div className={`space-y-4 ${className || ''}`}>
-        <h3 className="text-lg font-semibold text-text">Payment Information</h3>
-        <div className="flex items-center justify-center py-8">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent"></div>
-          <span className="ml-3 text-text-muted">Initializing payment...</span>
-        </div>
-      </div>
-    );
-  }
-
-  const appearance = {
-    theme: 'stripe' as const,
-    variables: {
-      colorPrimary: '#0070f3',
-      colorBackground: '#ffffff',
-      colorText: '#1a1a1a',
-      colorDanger: '#df1b41',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      spacingUnit: '4px',
-      borderRadius: '8px',
-    },
-  };
 
   return (
-    <div className={`space-y-4 ${className || ''}`}>
-      <h3 className="text-lg font-semibold text-text">Payment Information</h3>
+    <div className={`space-y-3 ${className || ''}`}>
+      <label className="block text-sm font-medium text-text">Card</label>
       {/* Key forces remount when payment intent changes */}
       <Elements
         key={paymentIntent.client_secret}
         stripe={stripeInstance}
         options={{
           clientSecret: paymentIntent.client_secret,
-          appearance,
         }}
       >
-        <CheckoutForm onSuccess={onSuccess} onError={onError} />
+        <CheckoutForm
+          onSuccess={onSuccess}
+          onError={onError}
+          clientSecret={paymentIntent.client_secret}
+        />
       </Elements>
     </div>
   );

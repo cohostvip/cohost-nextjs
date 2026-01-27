@@ -1,11 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCohostCheckout } from '@cohostvip/cohost-react';
 import { Button } from '@/components/ui';
 
 interface CouponFormProps {
   className?: string;
+}
+
+function parseErrorMessage(err: any): string {
+  // If it's a string that looks like JSON, try to parse it
+  if (typeof err === 'string') {
+    try {
+      const parsed = JSON.parse(err);
+      return parsed?.error?.message || parsed?.message || 'Invalid coupon code';
+    } catch {
+      return err;
+    }
+  }
+
+  // If err.message is JSON string
+  if (typeof err?.message === 'string') {
+    try {
+      const parsed = JSON.parse(err.message);
+      return parsed?.error?.message || parsed?.message || 'Invalid coupon code';
+    } catch {
+      return err.message;
+    }
+  }
+
+  return 'Invalid coupon code';
 }
 
 export function CouponForm({ className }: CouponFormProps) {
@@ -16,6 +40,16 @@ export function CouponForm({ className }: CouponFormProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const appliedCoupons = cartSession?.coupons || [];
+
+  // Auto-dismiss error after 4 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   const handleApply = async () => {
     if (!code.trim()) return;
@@ -28,7 +62,10 @@ export function CouponForm({ className }: CouponFormProps) {
       setCode('');
       setIsExpanded(false);
     } catch (err: any) {
-      setError(err?.message || 'Invalid coupon code');
+      const message = parseErrorMessage(err);
+      setError(message);
+      setCode('');
+      setIsExpanded(false);
     } finally {
       setIsLoading(false);
     }
@@ -38,12 +75,28 @@ export function CouponForm({ className }: CouponFormProps) {
     try {
       await removeCoupon(couponId);
     } catch (err: any) {
-      setError(err?.message || 'Failed to remove coupon');
+      const message = parseErrorMessage(err);
+      setError(message);
     }
+  };
+
+  const dismissError = () => {
+    setError(null);
   };
 
   return (
     <div className={className}>
+      {/* Error message - dismissible */}
+      {error && (
+        <button
+          onClick={dismissError}
+          className="mb-3 flex w-full items-center justify-between rounded-md bg-red-500/10 px-3 py-2 text-sm text-red-500 transition-opacity hover:bg-red-500/20"
+        >
+          <span>{error}</span>
+          <span className="text-xs opacity-60">tap to dismiss</span>
+        </button>
+      )}
+
       {/* Applied coupons */}
       {appliedCoupons.length > 0 && (
         <div className="mb-3 space-y-2">
@@ -67,14 +120,14 @@ export function CouponForm({ className }: CouponFormProps) {
       )}
 
       {/* Coupon input - toggle visibility */}
-      {!isExpanded && appliedCoupons.length === 0 ? (
+      {!isExpanded && appliedCoupons.length === 0 && !error ? (
         <button
           onClick={() => setIsExpanded(true)}
           className="text-sm text-accent hover:underline"
         >
           Have a coupon code?
         </button>
-      ) : appliedCoupons.length === 0 ? (
+      ) : isExpanded && appliedCoupons.length === 0 ? (
         <div className="space-y-2">
           <div className="flex gap-2">
             <input
@@ -107,10 +160,6 @@ export function CouponForm({ className }: CouponFormProps) {
           </button>
         </div>
       ) : null}
-
-      {error && (
-        <p className="mt-2 text-sm text-red-500">{error}</p>
-      )}
     </div>
   );
 }
