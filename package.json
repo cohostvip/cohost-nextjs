@@ -15,8 +15,8 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@cohostvip/cohost-node": "0.3.7",
-    "@cohostvip/cohost-react": "0.3.7",
+    "@cohostvip/cohost-node": "latest",
+    "@cohostvip/cohost-react": "latest",
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.9.0",
     "next": "16.0.5",
