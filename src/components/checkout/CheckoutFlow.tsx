@@ -12,7 +12,7 @@ import { CouponForm } from './CouponForm';
 import { CustomerForm } from './CustomerForm';
 import { PaymentForm } from './PaymentForm';
 
-type CheckoutStep = 'customer' | 'payment' | 'confirmation';
+type CheckoutStep = 'checkout' | 'confirmation';
 
 interface TicketQuantities {
   [ticketId: string]: number;
@@ -25,7 +25,7 @@ interface CheckoutContentProps {
 
 function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
   const { cartSession, placeOrder, processPayment, updateItem } = useCohostCheckout();
-  const [step, setStep] = useState<CheckoutStep>('customer');
+  const [step, setStep] = useState<CheckoutStep>('checkout');
   const [isCustomerValid, setIsCustomerValid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -64,21 +64,12 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
   const total = cartSession?.costs?.total;
   const isFreeOrder = total === 'USD,0' || total === '0' || parseFloat(total?.replace(/[^0-9.-]/g, '') || '0') === 0;
 
-  const handleContinueToPayment = () => {
+  const handlePlaceOrder = async () => {
     if (!isCustomerValid) {
       setError('Please fill in all required fields');
       return;
     }
-    setError(null);
 
-    if (isFreeOrder) {
-      handlePlaceOrder();
-    } else {
-      setStep('payment');
-    }
-  };
-
-  const handlePlaceOrder = async () => {
     setIsProcessing(true);
     setError(null);
 
@@ -145,27 +136,24 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
       <div className="mx-auto flex w-full max-w-5xl flex-col px-4 md:flex-row md:gap-8 md:px-6">
         {/* Left column - Main content */}
         <div className="flex flex-1 flex-col overflow-hidden md:max-w-xl">
-          {/* Step header - only title, no indicator */}
+          {/* Header */}
           <div className="py-4">
-            <h2 className="text-xl font-bold text-text">
-              {step === 'customer' && 'Your Information'}
-              {step === 'payment' && 'Payment'}
-            </h2>
+            <h2 className="text-xl font-bold text-text">Checkout</h2>
           </div>
 
           {/* Scrollable content area */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 space-y-6 overflow-y-auto">
             {error && (
-              <div className="mb-4 rounded-md bg-red-500/10 p-3 text-sm text-red-500">
+              <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-500">
                 {error}
               </div>
             )}
 
-            {step === 'customer' && (
-              <CustomerForm onValidChange={setIsCustomerValid} />
-            )}
+            {/* Customer Info */}
+            <CustomerForm onValidChange={setIsCustomerValid} />
 
-            {step === 'payment' && (
+            {/* Payment - only show after customer info is valid and not a free order */}
+            {!isFreeOrder && isCustomerValid && (
               <PaymentElementProvider>
                 <PaymentForm
                   onSuccess={handlePaymentSuccess}
@@ -174,31 +162,28 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
               </PaymentElementProvider>
             )}
 
-            {/* Desktop action buttons - directly below form content */}
-            <div className="mt-6 hidden md:block">
-              <div className="flex gap-3">
-                {step === 'payment' && (
-                  <Button
-                    variant="secondary"
-                    onClick={() => setStep('customer')}
-                    disabled={isProcessing}
-                  >
-                    Back
-                  </Button>
-                )}
-
-                {step === 'customer' && (
-                  <Button
-                    className="flex-1"
-                    onClick={handleContinueToPayment}
-                    disabled={!isCustomerValid || isProcessing || itemCount === 0}
-                  >
-                    {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue to Payment'}
-                  </Button>
-                )}
-                {/* Payment submit button is integrated in PaymentForm with Stripe Elements */}
+            {/* Placeholder for payment when customer info not yet valid */}
+            {!isFreeOrder && !isCustomerValid && (
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-text">Card</label>
+                <div className="rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3 text-text-muted">
+                  Fill in your information above to continue
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Complete Order button for free orders (desktop) */}
+            {isFreeOrder && (
+              <div className="hidden md:block">
+                <Button
+                  className="w-full"
+                  onClick={handlePlaceOrder}
+                  disabled={!isCustomerValid || isProcessing || itemCount === 0}
+                >
+                  {isProcessing ? 'Processing...' : 'Complete Order'}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -214,29 +199,17 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
       <div className="border-t border-border bg-surface p-4 md:hidden">
         <CartSummary compact className="mb-3" onEditTickets={handleEditTickets} />
 
-        <div className="flex gap-3">
-          {step === 'payment' && (
-            <Button
-              variant="secondary"
-              className="flex-1"
-              onClick={() => setStep('customer')}
-              disabled={isProcessing}
-            >
-              Back
-            </Button>
-          )}
-
-          {step === 'customer' && (
-            <Button
-              className="flex-1"
-              onClick={handleContinueToPayment}
-              disabled={!isCustomerValid || isProcessing || itemCount === 0}
-            >
-              {isProcessing ? 'Processing...' : isFreeOrder ? 'Complete Order' : 'Continue'}
-            </Button>
-          )}
-          {/* Payment submit button is integrated in PaymentForm with Stripe Elements */}
-        </div>
+        {/* Complete Order button for free orders (mobile) */}
+        {isFreeOrder && (
+          <Button
+            className="w-full"
+            onClick={handlePlaceOrder}
+            disabled={!isCustomerValid || isProcessing || itemCount === 0}
+          >
+            {isProcessing ? 'Processing...' : 'Complete Order'}
+          </Button>
+        )}
+        {/* Payment submit button is integrated in PaymentForm for paid orders */}
       </div>
     </div>
   );
