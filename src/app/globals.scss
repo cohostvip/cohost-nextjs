@@ -1,6 +1,22 @@
 @use '../styles/colors' as *;
 @import 'tailwindcss';
 
+// Override ticketing-ui CSS variables with app's dark theme
+:root {
+  --ticketing-primary: #{$color-primary};
+  --ticketing-primary-hover: #{$color-primary-hover};
+  --ticketing-accent: #{$color-accent};
+  --ticketing-background: #{$color-background};
+  --ticketing-surface: #{$color-surface};
+  --ticketing-surface-hover: #{$color-surface-elevated};
+  --ticketing-text: #{$color-text};
+  --ticketing-text-muted: #{$color-text-muted};
+  --ticketing-border: #{$color-border};
+  --ticketing-success: #{$color-success};
+  --ticketing-error: #{$color-error};
+  --ticketing-warning: #{$color-warning};
+}
+
 @theme {
   // Backgrounds
   --color-background: #{$color-background};
