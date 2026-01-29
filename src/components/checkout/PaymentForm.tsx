@@ -14,6 +14,7 @@ interface PaymentFormProps {
   className?: string;
   onSuccess?: (result: PaymentIntent) => void;
   onError?: (error: string) => void;
+  disabled?: boolean;
 }
 
 // Cache stripe instances by publishable key
@@ -50,10 +51,12 @@ function CheckoutForm({
   onSuccess,
   onError,
   clientSecret,
+  disabled,
 }: {
   onSuccess?: (result: PaymentIntent) => void;
   onError?: (error: string) => void;
   clientSecret: string;
+  disabled?: boolean;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -116,7 +119,7 @@ function CheckoutForm({
       )}
       <button
         type="submit"
-        disabled={!stripe || !isCardReady || isProcessing}
+        disabled={disabled || !stripe || !isCardReady || isProcessing}
         className="w-full rounded-md bg-accent px-4 py-3 font-medium text-white transition-colors hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isProcessing ? 'Processing...' : 'Pay Now'}
@@ -125,7 +128,7 @@ function CheckoutForm({
   );
 }
 
-export function PaymentForm({ className, onSuccess, onError }: PaymentFormProps) {
+export function PaymentForm({ className, onSuccess, onError, disabled }: PaymentFormProps) {
   const { paymentIntent, isLoading } = usePaymentElement();
 
 
@@ -176,6 +179,7 @@ export function PaymentForm({ className, onSuccess, onError }: PaymentFormProps)
           onSuccess={onSuccess}
           onError={onError}
           clientSecret={paymentIntent.client_secret}
+          disabled={disabled}
         />
       </Elements>
     </div>

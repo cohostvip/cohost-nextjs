@@ -152,24 +152,15 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
             {/* Customer Info */}
             <CustomerForm onValidChange={setIsCustomerValid} />
 
-            {/* Payment - only show after customer info is valid and not a free order */}
-            {!isFreeOrder && isCustomerValid && (
+            {/* Payment - show immediately to start fetching payment intent */}
+            {!isFreeOrder && (
               <PaymentElementProvider>
                 <PaymentForm
                   onSuccess={handlePaymentSuccess}
                   onError={handlePaymentError}
+                  disabled={!isCustomerValid}
                 />
               </PaymentElementProvider>
-            )}
-
-            {/* Placeholder for payment when customer info not yet valid */}
-            {!isFreeOrder && !isCustomerValid && (
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-text">Card</label>
-                <div className="rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3 text-text-muted">
-                  Fill in your information above to continue
-                </div>
-              </div>
             )}
 
             {/* Complete Order button for free orders (desktop) */}
