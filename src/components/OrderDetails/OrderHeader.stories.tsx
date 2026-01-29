@@ -21,18 +21,10 @@ export const Placed: Story = {
   },
 };
 
-export const Completed: Story = {
+export const Voided: Story = {
   args: {
     orderNumber: '29231296375',
-    status: 'completed',
-    created: '2025-11-07T15:40:45.446Z',
-  },
-};
-
-export const Cancelled: Story = {
-  args: {
-    orderNumber: '29231296375',
-    status: 'cancelled',
+    status: 'voided',
     created: '2025-11-07T15:40:45.446Z',
   },
 };
@@ -41,22 +33,6 @@ export const Refunded: Story = {
   args: {
     orderNumber: '29231296375',
     status: 'refunded',
-    created: '2025-11-07T15:40:45.446Z',
-  },
-};
-
-export const Pending: Story = {
-  args: {
-    orderNumber: '29231296375',
-    status: 'pending',
-    created: '2025-11-07T15:40:45.446Z',
-  },
-};
-
-export const Abandoned: Story = {
-  args: {
-    orderNumber: '29231296375',
-    status: 'abandoned',
     created: '2025-11-07T15:40:45.446Z',
   },
 };

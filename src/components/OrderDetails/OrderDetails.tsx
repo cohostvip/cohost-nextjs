@@ -19,7 +19,7 @@ export function OrderDetails({ order }: OrderDetailsProps) {
       <OrderHeader
         orderNumber={order.orderNumber}
         status={order.status}
-        created={order.created}
+        created={order.created as string}
       />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">

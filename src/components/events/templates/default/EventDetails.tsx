@@ -7,9 +7,15 @@ import { Button, GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSol
 import type { TicketQuantities } from '@/components/ui';
 import { CheckoutModal } from '@/components/checkout';
 import type { EventProfile, Ticket } from '@/lib/api';
+import type { TicketGroup } from '@/components/ui/TicketsList/types';
+
+// Extended event type that may include ticket groups
+interface EventWithGroups extends EventProfile {
+  ticketGroups?: TicketGroup[];
+}
 
 interface EventDetailsProps {
-  event: EventProfile;
+  event: EventWithGroups;
   tickets: Ticket[];
 }
 
@@ -117,7 +123,7 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
           {tickets.length > 0 && (
             <TicketsList
               tickets={tickets}
-              ticketGroups={(event as any).ticketGroups}
+              ticketGroups={event.ticketGroups}
               onGetTickets={handleGetTickets}
               isLoading={isLoading}
             />
