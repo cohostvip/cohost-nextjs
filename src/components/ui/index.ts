@@ -4,6 +4,7 @@ export { EventCard } from './EventCard';
 export { EventDateDisplay } from './EventDateDisplay';
 export { GoogleMap } from './GoogleMap';
 export { LocationCard } from './LocationCard';
+export { QuantitySelector } from './QuantitySelector';
 export { TicketCard, isTicketSoldOut } from './TicketCard';
 export { TicketsList } from './TicketsList';
 export type { TicketQuantities } from './TicketsList';
