@@ -1,7 +1,7 @@
 'use client';
 
 import type { Order } from '@/lib/api';
-import { formatCurrency } from '@/lib/formatCurrency';
+import { formatCurrency, isZeroAmount } from '@/lib/formatCurrency';
 
 type OrderItem = Order['items'][number];
 
@@ -13,9 +13,10 @@ interface OrderItemsListProps {
 }
 
 export function OrderItemsList({ items }: OrderItemsListProps) {
+
   return (
     <div className="rounded-lg border border-border bg-surface p-4">
-      <h2 className="text-lg font-semibold text-text mb-3">Items</h2>
+      <h2 className="text-lg font-semibold text-text mb-3">Tickets</h2>
 
       <div className="space-y-3">
         {items.map((item) => (
@@ -41,17 +42,28 @@ export function OrderItemsList({ items }: OrderItemsListProps) {
                 </p>
               )}
             </div>
+            {isZeroAmount(item.costs.subtotal) && isZeroAmount(item.costs.total) ? (
 
-            <div className="text-right flex-shrink-0">
-              <p className="font-medium text-text">
-                {formatCurrency(item.costs.subtotal)}
-              </p>
-              {item.quantity > 1 && (
-                <p className="text-sm text-text-subtle">
-                  {formatCurrency(item.costs.cost)} each
+              <div className="text-right flex-shrink-0">
+
+                <p className="font-medium text-text">
+                  -- 
                 </p>
-              )}
-            </div>
+              </div>
+            ) : (
+
+              <div className="text-right flex-shrink-0">
+
+                <p className="font-medium text-text">
+                  {formatCurrency(item.costs.subtotal)}
+                </p>
+                {item.quantity > 1 && (
+                  <p className="text-sm text-text-subtle">
+                    {formatCurrency(item.costs.cost)} each
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>

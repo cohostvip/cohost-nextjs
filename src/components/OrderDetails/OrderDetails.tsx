@@ -1,5 +1,3 @@
-'use client';
-
 import type { Order } from '@/lib/api';
 import { OrderHeader } from './OrderHeader';
 import { EventInfoCard } from './EventInfoCard';
@@ -22,10 +20,11 @@ export function OrderDetails({ order }: OrderDetailsProps) {
         created={order.created as string}
       />
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Left Column - Event Flyer (desktop) */}
-        <div className="hidden lg:block lg:col-span-1">
-          <div className="aspect-square overflow-hidden rounded-lg sticky top-24">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        {/* Event Info - Top on mobile, right side on desktop */}
+        <div className="order-1 md:order-2 md:col-span-1 space-y-4">
+          {/* Large Flyer - Only on md+ screens */}
+          <div className="hidden md:block aspect-square overflow-hidden rounded-lg">
             {resolvedContext?.logo?.url ? (
               <img
                 src={resolvedContext.logo.url}
@@ -38,20 +37,29 @@ export function OrderDetails({ order }: OrderDetailsProps) {
               </div>
             )}
           </div>
+
+          {/* Event Details - With small image on mobile, without image on desktop */}
+          {resolvedContext && (
+            <>
+              <div className="md:hidden">
+                <EventInfoCard context={resolvedContext} />
+              </div>
+              <div className="hidden md:block">
+                <EventInfoCard context={resolvedContext} hideImage />
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Right Column - Order Info */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* Event Info Card (shows flyer on mobile) */}
-          {resolvedContext && <EventInfoCard context={resolvedContext} />}
-
+        {/* Order Info - Bottom on mobile, left side on desktop */}
+        <div className="order-2 md:order-1 md:col-span-2 space-y-4">
           {/* Order Items */}
           {order.items.length > 0 && <OrderItemsList items={order.items} />}
 
           {/* Order Summary */}
           <OrderSummary costs={order.costs} />
 
-          {/* Customer Info (collapsed by default) */}
+          {/* Customer Info */}
           <CustomerInfo customer={order.customer} />
         </div>
       </div>

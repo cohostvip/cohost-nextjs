@@ -15,6 +15,13 @@ export function OrderSummary({ costs }: OrderSummaryProps) {
   const showDiscount = !isZeroAmount(costs.discount);
   const showTax = !isZeroAmount(costs.tax);
 
+
+
+  // If total is zero and there's no discount, don't show the summary
+  if (isZeroAmount(costs.total) && !showDiscount) {
+    return null;
+  }
+
   return (
     <div className="rounded-lg border border-border bg-surface p-4">
       <h2 className="text-lg font-semibold text-text mb-3">Order Summary</h2>

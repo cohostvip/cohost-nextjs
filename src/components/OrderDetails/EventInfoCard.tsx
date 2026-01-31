@@ -1,5 +1,3 @@
-'use client';
-
 interface ResolvedContext {
   title: string;
   start: string;
@@ -23,6 +21,7 @@ interface ResolvedContext {
 
 interface EventInfoCardProps {
   context: ResolvedContext;
+  hideImage?: boolean;
 }
 
 function formatEventDateTime(start: string, end?: string, timezone?: string): string {
@@ -80,15 +79,14 @@ function formatAddress(
   return parts.length > 0 ? parts.join(', ') : null;
 }
 
-export function EventInfoCard({ context }: EventInfoCardProps) {
+export function EventInfoCard({ context, hideImage }: EventInfoCardProps) {
   const formattedAddress = formatAddress(context.location?.address);
 
   return (
     <div className="rounded-lg border border-border bg-surface p-4">
-      <h2 className="text-lg font-semibold text-text mb-3">Event</h2>
 
       <div className="flex gap-4">
-        {context.logo?.url && (
+        {!hideImage && context.logo?.url && (
           <div className="flex-shrink-0">
             <img
               src={context.logo.url}

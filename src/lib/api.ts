@@ -61,7 +61,10 @@ export async function getAllTags(): Promise<string[]> {
  * Fetch a single order by ID.
  */
 export async function getOrder(id: string): Promise<Order> {
-  return cohostClient.orders.fetch(id);
+  // The API returns { order, organizer, transaction, transactions }
+  // We need to extract just the order
+  const response = await cohostClient.orders.fetch(id) as unknown as { order: Order };
+  return response.order;
 }
 
 // Re-export types for convenience
