@@ -1,3 +1,5 @@
+import { AddToCalendar } from './AddToCalendar';
+
 interface ResolvedContext {
   title: string;
   start: string;
@@ -81,10 +83,10 @@ function formatAddress(
 
 export function EventInfoCard({ context, hideImage }: EventInfoCardProps) {
   const formattedAddress = formatAddress(context.location?.address);
+  const locationString = [context.location?.name, formattedAddress].filter(Boolean).join(', ');
 
   return (
     <div className="rounded-lg border border-border bg-surface p-4">
-
       <div className="flex gap-4">
         {!hideImage && context.logo?.url && (
           <div className="flex-shrink-0">
@@ -111,6 +113,17 @@ export function EventInfoCard({ context, hideImage }: EventInfoCardProps) {
             <p className="text-sm text-text-subtle mt-0.5">{formattedAddress}</p>
           )}
         </div>
+      </div>
+
+      <div className="mt-4 pt-4 border-t border-border">
+        <AddToCalendar
+          event={{
+            title: context.title,
+            start: context.start,
+            end: context.end,
+            location: locationString || undefined,
+          }}
+        />
       </div>
     </div>
   );
