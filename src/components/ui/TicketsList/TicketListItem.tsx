@@ -99,6 +99,7 @@ export function TicketListItem({ ticket, quantity, onQuantityChange }: TicketIte
                         qty={quantity}
                         min={minQty}
                         max={maxQty}
+                        increment={ticket.step || 1}
                         onChange={onQuantityChange}
                         disabled={isSoldOut}
                         size="md"
