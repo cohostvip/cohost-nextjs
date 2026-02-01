@@ -20,10 +20,11 @@ interface TicketQuantities {
 
 interface CheckoutContentProps {
   onClose?: () => void;
+  onOrderComplete?: () => void;
   initialQuantities?: TicketQuantities;
 }
 
-function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
+function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: CheckoutContentProps) {
   const { cartSession, placeOrder, processPayment, updateItem } = useCohostCheckout();
   const [step, setStep] = useState<CheckoutStep>('checkout');
   const [isCustomerValid, setIsCustomerValid] = useState(false);
@@ -77,6 +78,8 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
       const result = await placeOrder();
       setOrderResult(result);
       setStep('confirmation');
+      // Notify parent that order is complete so it can refresh data
+      onOrderComplete?.();
     } catch (err: any) {
       setError(err?.message || 'Failed to place order');
     } finally {
@@ -93,6 +96,8 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
       const result = await placeOrder();
       setOrderResult(result);
       setStep('confirmation');
+      // Notify parent that order is complete so it can refresh data
+      onOrderComplete?.();
     } catch (err: any) {
       setError(err?.message || 'Failed to complete order');
     } finally {
@@ -209,13 +214,14 @@ function CheckoutContent({ onClose, initialQuantities }: CheckoutContentProps) {
 interface CheckoutFlowProps {
   cartSessionId: string;
   onClose?: () => void;
+  onOrderComplete?: () => void;
   initialQuantities?: TicketQuantities;
 }
 
-export function CheckoutFlow({ cartSessionId, onClose, initialQuantities }: CheckoutFlowProps) {
+export function CheckoutFlow({ cartSessionId, onClose, onOrderComplete, initialQuantities }: CheckoutFlowProps) {
   return (
     <CohostCheckoutProvider cartSessionId={cartSessionId}>
-      <CheckoutContent onClose={onClose} initialQuantities={initialQuantities} />
+      <CheckoutContent onClose={onClose} onOrderComplete={onOrderComplete} initialQuantities={initialQuantities} />
     </CohostCheckoutProvider>
   );
 }

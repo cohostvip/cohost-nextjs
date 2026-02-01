@@ -10,11 +10,12 @@ interface TicketQuantities {
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOrderComplete?: () => void;
   cartSessionId: string;
   initialQuantities?: TicketQuantities;
 }
 
-export function CheckoutModal({ isOpen, onClose, cartSessionId, initialQuantities }: CheckoutModalProps) {
+export function CheckoutModal({ isOpen, onClose, onOrderComplete, cartSessionId, initialQuantities }: CheckoutModalProps) {
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -75,7 +76,7 @@ export function CheckoutModal({ isOpen, onClose, cartSessionId, initialQuantitie
       <div className="relative z-10 flex h-full flex-col">
         {/* Main content area - centered with max width */}
         <div className="flex flex-1 flex-col overflow-hidden pt-16 md:pt-20">
-          <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} initialQuantities={initialQuantities} />
+          <CheckoutFlow cartSessionId={cartSessionId} onClose={onClose} onOrderComplete={onOrderComplete} initialQuantities={initialQuantities} />
         </div>
 
         {/* Footer links */}

@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCohostClient } from '@cohostvip/cohost-react';
 import { Button, GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSoldOut } from '@/components/ui';
 import type { TicketQuantities } from '@/components/ui';
@@ -20,11 +21,19 @@ interface EventDetailsProps {
 }
 
 export function EventDetails({ event, tickets }: EventDetailsProps) {
+  const router = useRouter();
   const { client } = useCohostClient();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [cartSessionId, setCartSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const pendingQuantitiesRef = useRef<TicketQuantities | null>(null);
+
+  const handleOrderComplete = useCallback(() => {
+    // Refresh server data to get updated ticket availability
+    router.refresh();
+    // Clear cart session so a new one is created on next purchase
+    setCartSessionId(null);
+  }, [router]);
 
   const handleGetTickets = useCallback(async (quantities: TicketQuantities) => {
     // Store quantities for setting in cart after creation
@@ -161,6 +170,7 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
         <CheckoutModal
           isOpen={isCheckoutOpen}
           onClose={handleCloseCheckout}
+          onOrderComplete={handleOrderComplete}
           cartSessionId={cartSessionId}
           initialQuantities={pendingQuantitiesRef.current || undefined}
         />
