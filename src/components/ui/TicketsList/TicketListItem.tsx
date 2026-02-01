@@ -80,30 +80,37 @@ export function TicketListItem({ ticket, quantity, onQuantityChange }: TicketIte
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-medium text-text">{ticket.name}</h4>
-                            {isSoldOut && (
-                                <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-400">
-                                    Sold Out
-                                </span>
-                            )}
+
                         </div>
-                        <p className={`mt-1 text-sm ${isSoldOut ? 'text-text-muted' : 'text-accent'}`}>
-                            {price}
-                            {hasFees && price !== 'Free' && (
-                                <span className="ml-1 text-xs text-text-muted">(incl. fees)</span>
-                            )}
-                        </p>
+                        {!isSoldOut && (
+
+                            <p className={`mt-1 text-sm text-accent`}>
+                                {price}
+                                {hasFees && price !== 'Free' && (
+                                    <span className="ml-1 text-xs text-text-muted">(incl. fees)</span>
+                                )}
+                            </p>
+                        )}
                     </div>
 
-                    {/* Quantity selector */}
-                    <QuantitySelector
-                        qty={quantity}
-                        min={minQty}
-                        max={maxQty}
-                        increment={ticket.step || 1}
-                        onChange={onQuantityChange}
-                        disabled={isSoldOut}
-                        size="md"
-                    />
+                    {isSoldOut ? (
+                        <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-400">
+                            Sold Out
+                        </span>
+                    ) : (
+                        <>
+                            {/* Quantity selector */}
+                            <QuantitySelector
+                                qty={quantity}
+                                min={minQty}
+                                max={maxQty}
+                                increment={ticket.step || 1}
+                                onChange={onQuantityChange}
+                                disabled={isSoldOut}
+                                size="md"
+                            />
+                        </>
+                    )}
                 </div>
 
                 {/* Second row: description snippet */}

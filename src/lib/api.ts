@@ -67,5 +67,26 @@ export async function getOrder(id: string): Promise<Order> {
   return response.order;
 }
 
+export interface OrderListItem {
+  id: string;
+  orderNumber: string;
+  status: string;
+  created: string;
+  costs: Order['costs'];
+  customer: Order['customer'];
+  meta?: {
+    resolvedContext?: {
+      title?: string;
+      start?: string;
+      logo?: { url?: string };
+    };
+  };
+}
+
+export interface OrdersListResponse {
+  orders: OrderListItem[];
+  hasMore: boolean;
+}
+
 // Re-export types for convenience
 export type { EventProfile, Ticket, Order };
