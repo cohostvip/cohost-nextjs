@@ -63,6 +63,18 @@ function CheckoutForm({
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isCardReady, setIsCardReady] = useState(false);
+  const [isCardComplete, setIsCardComplete] = useState(false);
+
+  const handleCardChange = (event: any) => {
+    // Track whether the card input is complete and valid
+    setIsCardComplete(event.complete);
+    // Clear any previous error when user makes changes
+    if (event.error) {
+      setErrorMessage(event.error.message);
+    } else {
+      setErrorMessage(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,9 +108,9 @@ function CheckoutForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" data-testid="payment-form">
       {/* Single combined card input field */}
-      <div className="relative rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3">
+      <div className="relative rounded-lg border border-[#333] bg-[#1f1f1f] px-4 py-3" data-testid="payment-card-container">
         {/* Loading overlay until CardElement is ready */}
         {!isCardReady && (
           <div className="absolute inset-0 flex items-center rounded-lg bg-[#1f1f1f] px-4">
@@ -109,18 +121,20 @@ function CheckoutForm({
         <CardElement
           options={cardElementOptions}
           onReady={() => setIsCardReady(true)}
+          onChange={handleCardChange}
         />
       </div>
 
       {errorMessage && (
-        <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400">
+        <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400" data-testid="payment-error">
           {errorMessage}
         </div>
       )}
       <button
         type="submit"
-        disabled={disabled || !stripe || !isCardReady || isProcessing}
+        disabled={disabled || !stripe || !isCardReady || !isCardComplete || isProcessing}
         className="w-full rounded-md bg-accent px-4 py-3 font-medium text-white transition-colors hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-50"
+        data-testid="payment-submit"
       >
         {isProcessing ? 'Processing...' : 'Pay Now'}
       </button>

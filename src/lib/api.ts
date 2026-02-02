@@ -59,11 +59,18 @@ export async function getAllTags(): Promise<string[]> {
 
 /**
  * Fetch a single order by ID.
+ * @param id - The order ID
+ * @param token - Optional access token for user-authenticated requests
  */
-export async function getOrder(id: string): Promise<Order> {
+export async function getOrder(id: string, token?: string): Promise<Order> {
+  // Use a token-specific client if provided, otherwise use the site client
+  const client = token
+    ? createCohostClient({ token })
+    : cohostClient;
+
   // The API returns { order, organizer, transaction, transactions }
   // We need to extract just the order
-  const response = await cohostClient.orders.fetch(id) as unknown as { order: Order };
+  const response = await client.orders.fetch(id) as unknown as { order: Order };
   return response.order;
 }
 

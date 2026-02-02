@@ -67,7 +67,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
   };
 
   return (
-    <div className={`space-y-4 ${className || ''}`}>
+    <div className={`space-y-4 ${className || ''}`} data-testid="customer-form">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-text">
@@ -84,9 +84,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
                 : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
             placeholder="Jane"
+            data-testid="customer-first-name"
           />
           {errors.first && (
-            <p className="mt-1 text-xs text-red-500">{errors.first}</p>
+            <p className="mt-1 text-xs text-red-500" data-testid="customer-first-name-error">{errors.first}</p>
           )}
         </div>
 
@@ -105,9 +106,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
                 : 'border-text-subtle focus:border-accent focus:ring-accent'
             }`}
             placeholder="Smith"
+            data-testid="customer-last-name"
           />
           {errors.last && (
-            <p className="mt-1 text-xs text-red-500">{errors.last}</p>
+            <p className="mt-1 text-xs text-red-500" data-testid="customer-last-name-error">{errors.last}</p>
           )}
         </div>
       </div>
@@ -127,9 +129,10 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
               : 'border-text-subtle focus:border-accent focus:ring-accent'
           }`}
           placeholder="john@example.com"
+          data-testid="customer-email"
         />
         {errors.email && (
-          <p className="mt-1 text-xs text-red-500">{errors.email}</p>
+          <p className="mt-1 text-xs text-red-500" data-testid="customer-email-error">{errors.email}</p>
         )}
       </div>
 
@@ -144,6 +147,7 @@ export function CustomerForm({ className, onValidChange }: CustomerFormProps) {
           onBlur={handleBlur}
           className="w-full rounded-md border border-text-subtle bg-surface px-3 py-2 text-text placeholder:text-text-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
           placeholder="+1 (555) 123-4567"
+          data-testid="customer-phone"
         />
       </div>
     </div>

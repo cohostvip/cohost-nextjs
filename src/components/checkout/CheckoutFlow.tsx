@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   CohostCheckoutProvider,
   PaymentElementProvider,
   useCohostCheckout,
+  useAuth,
 } from '@cohostvip/cohost-react';
 import { Button } from '@/components/ui';
 import { CartSummary } from './CartSummary';
@@ -12,7 +14,18 @@ import { CouponForm } from './CouponForm';
 import { CustomerForm } from './CustomerForm';
 import { PaymentForm } from './PaymentForm';
 
+const AUTO_REDIRECT_DELAY_MS = 60 * 1000; // 1 minute
+
 type CheckoutStep = 'checkout' | 'confirmation';
+
+// Response from placeOrder API
+interface PlaceOrderResult {
+  result: string;
+  id: string;
+  uid: string;
+  redirUri: string;
+  accessToken: string;
+}
 
 interface TicketQuantities {
   [ticketId: string]: number;
@@ -25,13 +38,16 @@ interface CheckoutContentProps {
 }
 
 function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: CheckoutContentProps) {
+  const router = useRouter();
   const { cartSession, placeOrder, processPayment, updateItem } = useCohostCheckout();
+  const { authenticateWithToken } = useAuth();
   const [step, setStep] = useState<CheckoutStep>('checkout');
   const [isCustomerValid, setIsCustomerValid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [orderResult, setOrderResult] = useState<any>(null);
+  const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const initialQuantitiesSetRef = useRef(false);
+  const autoRedirectTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Set initial quantities when cart session is available
   useEffect(() => {
@@ -75,8 +91,21 @@ function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: Checko
     setError(null);
 
     try {
-      const result = await placeOrder();
-      setOrderResult(result);
+      const result = await placeOrder() as unknown as PlaceOrderResult | undefined;
+      if (result) {
+        setOrderResult(result);
+
+        // Authenticate user with the access token from checkout response
+        if (result.accessToken) {
+          try {
+            await authenticateWithToken(result.accessToken);
+          } catch (authErr) {
+            // Log but don't fail - user can still see confirmation
+            console.warn('Failed to authenticate with order token:', authErr);
+          }
+        }
+      }
+
       setStep('confirmation');
       // Notify parent that order is complete so it can refresh data
       onOrderComplete?.();
@@ -93,12 +122,30 @@ function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: Checko
 
     try {
       // Payment already confirmed by Stripe, now place the order
-      const result = await placeOrder();
-      setOrderResult(result);
+      const result = await placeOrder() as unknown as PlaceOrderResult | undefined;
+      console.log('[CheckoutFlow] placeOrder result:', JSON.stringify(result, null, 2));
+      if (result) {
+        setOrderResult(result);
+        console.log('[CheckoutFlow] orderResult set:', { uid: result.uid, id: result.id, hasToken: !!result.accessToken });
+
+        // Authenticate user with the access token from checkout response
+        if (result.accessToken) {
+          try {
+            await authenticateWithToken(result.accessToken);
+          } catch (authErr) {
+            // Log but don't fail - user can still see confirmation
+            console.warn('Failed to authenticate with order token:', authErr);
+          }
+        }
+      } else {
+        console.warn('[CheckoutFlow] placeOrder returned undefined/null');
+      }
+
       setStep('confirmation');
       // Notify parent that order is complete so it can refresh data
       onOrderComplete?.();
     } catch (err: any) {
+      console.error('[CheckoutFlow] placeOrder error:', err);
       setError(err?.message || 'Failed to complete order');
     } finally {
       setIsProcessing(false);
@@ -114,10 +161,39 @@ function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: Checko
     onClose?.();
   };
 
+  // Build order confirmation URL: /account/orders/{uid}_{orderId}?token={accessToken}
+  const orderConfirmationUrl = orderResult?.uid && orderResult?.id
+    ? `/account/orders/${orderResult.uid}_${orderResult.id}${orderResult.accessToken ? `?token=${orderResult.accessToken}` : ''}`
+    : null;
+
+  // Redirect to order confirmation page
+  const handleRedirectToOrder = () => {
+    if (orderConfirmationUrl) {
+      router.push(orderConfirmationUrl);
+    } else {
+      onClose?.();
+    }
+  };
+
+  // Set up auto-redirect timer when confirmation screen is shown
+  useEffect(() => {
+    if (step === 'confirmation' && orderConfirmationUrl) {
+      autoRedirectTimerRef.current = setTimeout(() => {
+        router.push(orderConfirmationUrl);
+      }, AUTO_REDIRECT_DELAY_MS);
+
+      return () => {
+        if (autoRedirectTimerRef.current) {
+          clearTimeout(autoRedirectTimerRef.current);
+        }
+      };
+    }
+  }, [step, orderConfirmationUrl, router]);
+
   // Confirmation screen
   if (step === 'confirmation') {
     return (
-      <div className="flex flex-1 items-center justify-center p-6">
+      <div className="flex flex-1 items-center justify-center p-6" data-testid="order-confirmation">
         <div className="max-w-md text-center">
           <div className="mb-4 text-5xl">🎉</div>
           <h2 className="mb-2 text-2xl font-bold text-text">Order Confirmed!</h2>
@@ -125,11 +201,11 @@ function CheckoutContent({ onClose, onOrderComplete, initialQuantities }: Checko
             Thank you for your purchase. Your tickets have been sent to your email.
           </p>
           {orderResult?.id && (
-            <p className="mb-4 text-sm text-text-subtle">
+            <p className="mb-4 text-sm text-text-subtle" data-testid="order-confirmation-id">
               Order ID: {orderResult.id}
             </p>
           )}
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={handleRedirectToOrder} data-testid="view-order-button">View Order</Button>
         </div>
       </div>
     );
