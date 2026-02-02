@@ -4,23 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  '@cohostvip/cohost-node': link:../cohost-js/packages/node
-  '@cohostvip/cohost-react': link:../cohost-js/packages/react
-
 importers:
 
   .:
     dependencies:
       '@cohostvip/cohost-node':
-        specifier: link:../cohost-js/packages/node
-        version: link:../cohost-js/packages/node
+        specifier: latest
+        version: 0.3.13
       '@cohostvip/cohost-react':
-        specifier: link:../cohost-js/packages/react
-        version: link:../cohost-js/packages/react
-      '@cohostvip/ticketing-ui':
-        specifier: ^0.3.7
-        version: 0.3.7(@cohostvip/cohost-node@cohost-js+packages+node)(@cohostvip/cohost-react@cohost-js+packages+react)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(tailwindcss@4.1.18)
+        specifier: latest
+        version: 0.3.13(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@stripe/react-stripe-js':
         specifier: ^3.7.0
         version: 3.10.0(@stripe/stripe-js@7.9.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -98,7 +91,7 @@ importers:
         specifier: ^4.1.18
         version: 4.1.18
       typescript:
-        specifier: ^5.9.0
+        specifier: ^5.8.0
         version: 5.9.3
       vite:
         specifier: ^7.3.1
@@ -197,15 +190,24 @@ packages:
     peerDependencies:
       storybook: ^0.0.0-0 || ^10.1.0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0
 
-  '@cohostvip/ticketing-ui@0.3.7':
-    resolution: {integrity: sha512-q3h7OGFlZEG9BqSU1ILV26LZhuxTEdRUaxv2nIijesjQ/0snjkU0M1kQiYU5UBYwGP10Sgt/x71UGNn1+mjbOw==}
+  '@cohostvip/cohost-auth@0.3.13':
+    resolution: {integrity: sha512-a0GCM/xll/l5bcI8I9WETaC7XDZ59cJf4Uz2GX3fAzSSp4N8GL6ygjedBWF048FdHt25/EVbp+ZUXkjaovVbwA==}
+    engines: {node: '>=18.0.0'}
+
+  '@cohostvip/cohost-node@0.3.13':
+    resolution: {integrity: sha512-K1N7RlqlNpMgkCs4cQtPxg40uPYXC2w4mOS5o2Q9gchv1190dqz5rT0b7xQ2DaniOdUGdk8Rq7tapfNqyKWYeA==}
+    engines: {node: '>=18.0.0'}
+
+  '@cohostvip/cohost-react@0.3.13':
+    resolution: {integrity: sha512-J9+dimn2G/76UCydOYH8FOT+U1+Z2ehne2c6/KYSG+WzmEP3ZlrfxqZdcYw2xssjsVLoH8qSNlBEthi50+HLqw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      '@cohostvip/cohost-node': '*'
-      '@cohostvip/cohost-react': '*'
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
-      tailwindcss: ^3.4.0
+
+  '@cohostvip/cohost-types@0.3.13':
+    resolution: {integrity: sha512-2poHEzLwsQn4YbI2WZSh5tvvWWCU/FVJYglyNKKruA86vKi2YsTLIujMMjTjMT/1f9bjjy2CWUUS3FWMQfXhWA==}
+    engines: {node: '>=18.0.0'}
 
   '@emnapi/core@1.8.1':
     resolution: {integrity: sha512-AvT9QFpxK0Zd8J0jopedNm+w/2fIzvtPKPjqyw9jwvBaReTTqPBk9Hixaz7KbjimP+QNz605/XnjFcDAL2pqBg==}
@@ -3323,13 +3325,20 @@ snapshots:
       - '@chromatic-com/cypress'
       - '@chromatic-com/playwright'
 
-  '@cohostvip/ticketing-ui@0.3.7(@cohostvip/cohost-node@cohost-js+packages+node)(@cohostvip/cohost-react@cohost-js+packages+react)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(tailwindcss@4.1.18)':
+  '@cohostvip/cohost-auth@0.3.13': {}
+
+  '@cohostvip/cohost-node@0.3.13':
     dependencies:
-      '@cohostvip/cohost-node': link:../cohost-js/packages/node
-      '@cohostvip/cohost-react': link:../cohost-js/packages/react
+      '@cohostvip/cohost-types': 0.3.13
+
+  '@cohostvip/cohost-react@0.3.13(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
+    dependencies:
+      '@cohostvip/cohost-auth': 0.3.13
+      '@cohostvip/cohost-node': 0.3.13
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
-      tailwindcss: 4.1.18
+
+  '@cohostvip/cohost-types@0.3.13': {}
 
   '@emnapi/core@1.8.1':
     dependencies:
