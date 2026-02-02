@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { Ticket } from '@/lib/api';
 import { QuantitySelector } from '@/components/ui/QuantitySelector';
 import { TicketItemProps } from './types';
-import { formatTicketPrice, isTicketSoldOut } from './utils';
+import { formatTicketPrice, isTicketSoldOut, getTicketSalesStatus, formatSalesStartDate } from './utils';
 
 
 
@@ -50,9 +50,11 @@ function TicketDetailsModal({
 
 
 
-export function TicketListItem({ ticket, quantity, onQuantityChange }: TicketItemProps) {
+export function TicketListItem({ ticket, quantity, onQuantityChange, showSalesStatus = false, eventStart }: TicketItemProps) {
     const [showModal, setShowModal] = useState(false);
     const isSoldOut = isTicketSoldOut(ticket);
+    const salesStatus = showSalesStatus ? getTicketSalesStatus(ticket, eventStart) : { status: 'active' as const };
+    const isUnavailable = isSoldOut || (showSalesStatus && salesStatus.status !== 'active' && salesStatus.status !== 'ending-soon');
     const { price, hasFees } = formatTicketPrice(ticket);
 
     // Get min/max from ticket, with sensible defaults
@@ -72,18 +74,46 @@ export function TicketListItem({ ticket, quantity, onQuantityChange }: TicketIte
     const plainDescription = ticket.description ? stripHtml(ticket.description) : '';
     const hasLongDescription = plainDescription.length > 150;
 
+    const renderStatusBadge = () => {
+        if (isSoldOut) {
+            return (
+                <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-400">
+                    Sold Out
+                </span>
+            );
+        }
+        if (salesStatus.status === 'not-started') {
+            return (
+                <span className="rounded-full bg-amber-500/20 px-2 py-0.5 text-xs font-medium text-amber-400">
+                    On sale {formatSalesStartDate(salesStatus.startsAt)}
+                </span>
+            );
+        }
+        if (salesStatus.status === 'ended') {
+            return (
+                <span className="rounded-full bg-gray-500/20 px-2 py-0.5 text-xs font-medium text-gray-400">
+                    Sales ended
+                </span>
+            );
+        }
+        return null;
+    };
+
     return (
         <>
-            <div className={`py-4 ${isSoldOut ? 'opacity-60' : ''}`}>
+            <div className={`py-4 ${isUnavailable ? 'opacity-60' : ''}`}>
                 {/* First row: name+price left, qty right */}
                 <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-medium text-text">{ticket.name}</h4>
-
+                            {salesStatus.status === 'ending-soon' && (
+                                <span className="rounded-full bg-orange-500/20 px-2 py-0.5 text-xs font-medium text-orange-400">
+                                    {salesStatus.daysLeft <= 1 ? 'Last day!' : `${salesStatus.daysLeft} days left`}
+                                </span>
+                            )}
                         </div>
-                        {!isSoldOut && (
-
+                        {!isUnavailable && (
                             <p className={`mt-1 text-sm text-accent`}>
                                 {price}
                                 {hasFees && price !== 'Free' && (
@@ -93,23 +123,18 @@ export function TicketListItem({ ticket, quantity, onQuantityChange }: TicketIte
                         )}
                     </div>
 
-                    {isSoldOut ? (
-                        <span className="rounded-full bg-red-500/20 px-2 py-0.5 text-xs font-medium text-red-400">
-                            Sold Out
-                        </span>
+                    {isUnavailable ? (
+                        renderStatusBadge()
                     ) : (
-                        <>
-                            {/* Quantity selector */}
-                            <QuantitySelector
-                                qty={quantity}
-                                min={minQty}
-                                max={maxQty}
-                                increment={ticket.step || 1}
-                                onChange={onQuantityChange}
-                                disabled={isSoldOut}
-                                size="md"
-                            />
-                        </>
+                        <QuantitySelector
+                            qty={quantity}
+                            min={minQty}
+                            max={maxQty}
+                            increment={ticket.step || 1}
+                            onChange={onQuantityChange}
+                            disabled={isUnavailable}
+                            size="md"
+                        />
                     )}
                 </div>
 

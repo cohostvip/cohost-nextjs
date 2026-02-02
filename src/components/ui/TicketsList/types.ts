@@ -23,10 +23,18 @@ export interface TicketsListProps {
     onGetTickets: (quantities: TicketQuantities) => void;
     isLoading?: boolean;
     className?: string;
+    /** Show sales status badges (ending soon, not started, ended). Default: false */
+    showSalesStatus?: boolean;
+    /** Event start date - used to hide "ending soon" if sales end after event starts */
+    eventStart?: string | Date;
 }
 
 export interface TicketItemProps {
     ticket: Ticket;
     quantity: number;
     onQuantityChange: (quantity: number) => void;
+    /** Show sales status badges (ending soon, not started, ended). Default: false */
+    showSalesStatus?: boolean;
+    /** Event start date - used to hide "ending soon" if sales end after event starts */
+    eventStart?: Date;
 }

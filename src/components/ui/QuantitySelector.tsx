@@ -75,7 +75,7 @@ export function QuantitySelector({
   const styles = sizeStyles[size];
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-testid="quantity-selector">
       <Button
         size="sm"
         variant="secondary"
@@ -83,10 +83,14 @@ export function QuantitySelector({
         disabled={disabled || !canDecrement}
         className={`${styles.button} p-0`}
         aria-label="Decrease quantity"
+        data-testid="quantity-decrement"
       >
         −
       </Button>
-      <span className={`${styles.text} text-center font-medium text-text tabular-nums`}>
+      <span
+        className={`${styles.text} text-center font-medium text-text tabular-nums`}
+        data-testid="quantity-value"
+      >
         {qty}
       </span>
       <Button
@@ -96,6 +100,7 @@ export function QuantitySelector({
         disabled={disabled || !canIncrement}
         className={`${styles.button} p-0`}
         aria-label="Increase quantity"
+        data-testid="quantity-increment"
       >
         +
       </Button>

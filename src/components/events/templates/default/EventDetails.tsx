@@ -4,7 +4,7 @@ import { useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCohostClient } from '@cohostvip/cohost-react';
-import { Button, GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSoldOut } from '@/components/ui';
+import { GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSoldOut } from '@/components/ui';
 import type { TicketQuantities } from '@/components/ui';
 import { CheckoutModal } from '@/components/checkout';
 import type { EventProfile, Ticket } from '@/lib/api';
@@ -30,9 +30,8 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
 
   const handleOrderComplete = useCallback(() => {
     // Refresh server data to get updated ticket availability
+    // Don't clear cartSessionId here - let the confirmation screen show first
     router.refresh();
-    // Clear cart session so a new one is created on next purchase
-    setCartSessionId(null);
   }, [router]);
 
   const handleGetTickets = useCallback(async (quantities: TicketQuantities) => {
@@ -60,10 +59,10 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
 
   const handleCloseCheckout = useCallback(() => {
     setIsCheckoutOpen(false);
-    // Keep cartSessionId to preserve selection if user reopens
+    // Clear cart session so a new one is created on next purchase
+    setCartSessionId(null);
   }, []);
 
-  const hasAvailableTickets = tickets.some((t) => !isTicketSoldOut(t));
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
