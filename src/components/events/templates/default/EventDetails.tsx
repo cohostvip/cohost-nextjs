@@ -4,15 +4,18 @@ import { useState, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCohostClient } from '@cohostvip/cohost-react';
+import type { ContentBlock } from '@cohostvip/cohost-node';
 import { GoogleMap, DateTimeCard, LocationCard, TicketsList, isTicketSoldOut } from '@/components/ui';
 import type { TicketQuantities } from '@/components/ui';
 import { CheckoutModal } from '@/components/checkout';
+import { BlockRenderer } from '@/components/blocks';
 import type { EventProfile, Ticket } from '@/lib/api';
 import type { TicketGroup } from '@/components/ui/TicketsList/types';
 
-// Extended event type that may include ticket groups
+// Extended event type that may include ticket groups and content blocks
 interface EventWithGroups extends EventProfile {
   ticketGroups?: TicketGroup[];
+  contentBlocks?: ContentBlock[];
 }
 
 interface EventDetailsProps {
@@ -137,20 +140,14 @@ export function EventDetails({ event, tickets }: EventDetailsProps) {
             />
           )}
 
-          {/* Event Description */}
-          <div>
-            <h2 className="text-xl font-bold text-text mb-4">About this event</h2>
-            {event.description?.html ? (
-              <div
-                className="prose prose-invert max-w-none text-text-muted"
-                dangerouslySetInnerHTML={{ __html: event.description.html }}
-              />
-            ) : event.summary ? (
-              <p className="text-text-muted">{event.summary}</p>
-            ) : (
-              <p className="text-text-subtle">No description available</p>
-            )}
-          </div>
+          {/* Content Blocks */}
+          {event.contentBlocks && event.contentBlocks.length > 0 && (
+            <div className="space-y-8">
+              {event.contentBlocks.map((block) => (
+                <BlockRenderer key={block.id} block={block} />
+              ))}
+            </div>
+          )}
 
           {/* Google Map */}
           {event.location?.geometry && (

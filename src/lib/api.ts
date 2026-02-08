@@ -1,4 +1,4 @@
-import { createCohostClient, PaginatedResponse, type EventProfile, type Ticket, type Order } from '@cohostvip/cohost-node';
+import { createCohostClient, PaginatedResponse, type EventProfile, type Ticket, type Order, ContentBlock } from '@cohostvip/cohost-node';
 
 /**
  * Centralized Cohost API client instance.
@@ -16,18 +16,21 @@ export async function getEvents(): Promise<PaginatedResponse<EventProfile>> {
 }
 
 /**
- * Fetch a single event by ID.
+ * Fetch a single event by ID or URL slug.
  */
-export async function getEvent(id: string): Promise<EventProfile> {
-  return cohostClient.events.fetch(id);
+export async function getEvent(idOrSlug: string): Promise<EventProfile | null> {
+  try {
+    return await cohostClient.events.fetch(idOrSlug);
+  } catch {
+    return null;
+  }
 }
 
 /**
- * Fetch a single event by URL slug.
+ * Fetch content blocks for an event.
  */
-export async function getEventByUrl(url: string): Promise<EventProfile | null> {
-  const e = await cohostClient.events.fetch(url);
-  return e || null;
+export async function getEventContentBlocks(eventId: string): Promise<ContentBlock[]> {
+  return cohostClient.events.blocks(eventId);
 }
 
 /**
